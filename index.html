@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Футбол-Апп PRO — ОЗ</title>
+    <title>ОЗ-Апп PRO — H2H</title>
     <style>
         * {
             box-sizing: border-box;
@@ -31,9 +31,7 @@
             color: #1a1a1a !important;
             border-color: #d0d5dd !important;
         }
-        body.light .history-item {
-            background: #ffffff !important;
-        }
+        body.light .history-item,
         body.light .stats-card {
             background: #ffffff !important;
         }
@@ -47,10 +45,6 @@
         .header h1 {
             font-size: 18px;
             color: #f7931a;
-        }
-        .header .version {
-            font-size: 9px;
-            color: #555;
         }
         .header-actions button {
             background: none;
@@ -110,7 +104,7 @@
             background: #0b0e14;
             color: #e0e0e0;
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
             outline: none;
         }
         .input-row .field input:focus {
@@ -162,6 +156,18 @@
             background: #3a1a1a;
             color: #ff8a8a;
             flex: 1;
+        }
+        .btn-api {
+            background: #3498db;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-api:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         .action-row {
             display: flex;
@@ -256,6 +262,70 @@
             border-color: #f7931a;
         }
 
+        /* ===== ИНДИКАТОР ЗАГРУЗКИ ===== */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            font-size: 13px;
+            padding: 4px 0;
+        }
+        .loading-text .spinner-small {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #888;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+            flex-shrink: 0;
+        }
+
+        .h2h-results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin: 4px 0;
+        }
+        .h2h-item {
+            background: #1a1f2a;
+            border: 1px solid #2a3140;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .h2h-item .oz {
+            color: #2ecc71;
+        }
+        .h2h-item .no-oz {
+            color: #e74c3c;
+        }
+        .h2h-item .score {
+            font-weight: 600;
+        }
+        .h2h-loading {
+            color: #888;
+            font-size: 12px;
+            padding: 4px 0;
+        }
+
         .history-item {
             background: #1a1f2a;
             padding: 6px 10px;
@@ -323,14 +393,6 @@
         .text-center {
             text-align: center;
         }
-        .mt-1 {
-            margin-top: 4px;
-        }
-        .flex {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
 
         .toast {
             position: fixed;
@@ -389,10 +451,27 @@
 
     <!-- ВВОД ДАННЫХ -->
     <div class="card">
-        <div class="card-title">⚽ Введите голы</div>
+        <div class="card-title">⚽ Введите голы (или загрузите H2H)</div>
         <div class="input-row">
             <div class="field"><label>🏠 Хозяева</label><input type="number" id="homeGoals" value="0" min="0" /></div>
             <div class="field"><label>✈️ Гости</label><input type="number" id="awayGoals" value="0" min="0" /></div>
+        </div>
+    </div>
+
+    <!-- НАЗВАНИЯ КОМАНД + КНОПКА ЗАГРУЗКИ H2H -->
+    <div class="card">
+        <div class="card-title">🔍 Команды для H2H</div>
+        <div class="input-row">
+            <div class="field"><label>🏠 Хозяева</label><input type="text" id="homeTeamH2H" placeholder="Реал Мадрид" /></div>
+            <div class="field"><label>✈️ Гости</label><input type="text" id="awayTeamH2H" placeholder="Барселона" /></div>
+        </div>
+        <button class="btn btn-api" id="loadH2HBtn" onclick="loadH2H()">
+            <span id="loadBtnText">📊 Загрузить H2H</span>
+            <span id="loadSpinner" style="display:none;"><span class="spinner"></span></span>
+        </button>
+        <div id="h2hContainer">
+            <div class="h2h-loading" id="h2hStatus">Введите команды и нажмите "Загрузить H2H"</div>
+            <div class="h2h-results" id="h2hResults"></div>
         </div>
     </div>
 
@@ -431,12 +510,6 @@
         <span id="bkComment" style="font-size:12px;font-weight:600;padding:2px 10px;border-radius:12px;">—</span>
     </div>
 
-    <!-- НАЗВАНИЯ КОМАНД -->
-    <div class="input-row">
-        <div class="field"><label>🏠 Хозяева</label><input type="text" id="homeName" placeholder="Реал Мадрид" /></div>
-        <div class="field"><label>✈️ Гости</label><input type="text" id="awayName" placeholder="Барселона" /></div>
-    </div>
-
     <!-- ИСТОРИЯ -->
     <div style="margin-top:6px;">
         <div style="display:flex;justify-content:space-between;margin:4px 0;">
@@ -471,12 +544,11 @@
 
     <script>
         // ================================================================
-        // ОЗ-Апп PRO — ТОЛЬКО РЕЖИМ "ОБЕ ЗАБЬЮТ" + ВСЕ ЛИГИ
+        // ОЗ-Апп PRO — H2H + ИНДИКАЦИЯ ЗАГРУЗКИ
         // ================================================================
 
         // === ВСЕ ЛИГИ (72) ===
         const ALL_LEAGUES = {
-            // Топ-5
             'premier': { name: '🏴 АПЛ', oz: 65 },
             'championship': { name: '🏴 Чемпионшип', oz: 62 },
             'league1': { name: '🏴 Лига 1', oz: 58 },
@@ -491,13 +563,9 @@
             'seriec': { name: '🇮🇹 Серия С', oz: 52 },
             'ligue1': { name: '🇫🇷 Лига 1', oz: 58 },
             'ligue2': { name: '🇫🇷 Лига 2', oz: 54 },
-
-            // Россия
             'rpl': { name: '🇷🇺 РПЛ', oz: 55 },
             'rpl1': { name: '🇷🇺 Первая лига', oz: 50 },
             'rpl2': { name: '🇷🇺 Вторая лига', oz: 48 },
-
-            // Европа
             'eredivisie': { name: '🇳🇱 Эредивизи', oz: 72 },
             'primeira': { name: '🇵🇹 Примейра', oz: 60 },
             'superlig': { name: '🇹🇷 Суперлига', oz: 64 },
@@ -544,14 +612,10 @@
             'slovenia2': { name: '🇸🇮 Вторая лига', oz: 42 },
             'israel': { name: '🇮🇱 Премьер-лига', oz: 56 },
             'israel2': { name: '🇮🇱 Национальная лига', oz: 50 },
-
-            // Америка
             'brasil': { name: '🇧🇷 Серия А', oz: 62 },
             'argentina': { name: '🇦🇷 Примера', oz: 58 },
             'mls': { name: '🇺🇸 MLS', oz: 68 },
             'ligamx': { name: '🇲🇽 Лига MX', oz: 64 },
-
-            // Азия + Австралия
             'j1': { name: '🇯🇵 J1 Лига', oz: 60 },
             'j2': { name: '🇯🇵 J2 Лига', oz: 56 },
             'j3': { name: '🇯🇵 J3 Лига', oz: 52 },
@@ -578,21 +642,15 @@
             'singapore': { name: '🇸🇬 Премьер-лига', oz: 52 },
             'hongkong': { name: '🇭🇰 Премьер-лига', oz: 50 },
             'newzealand': { name: '🇳🇿 Премьер-лига', oz: 54 },
-
-            // Африка
             'safrica': { name: '🇿🇦 Премьер-дивизион', oz: 50 },
             'egypt': { name: '🇪🇬 Премьер-лига', oz: 48 },
             'morocco': { name: '🇲🇦 Ботола', oz: 46 },
             'tunisia': { name: '🇹🇳 Лига 1', oz: 44 },
             'ivorycoast': { name: '🇨🇮 Лига 1', oz: 42 },
             'nigeria': { name: '🇳🇬 Премьер-лига', oz: 46 },
-
-            // Еврокубки
             'ucl': { name: '🏆 Лига Чемпионов', oz: 66 },
             'uel': { name: '🏆 Лига Европы', oz: 62 },
             'ecl': { name: '🏆 Лига Конференций', oz: 60 },
-
-            // Международные
             'worldcup': { name: '🌍 ЧМ', oz: 58 },
             'euro': { name: '🌍 ЧЕ', oz: 60 },
             'copa': { name: '🌍 Кубок Америки', oz: 56 }
@@ -601,8 +659,14 @@
         // ===== СОСТОЯНИЕ =====
         let state = {
             bets: JSON.parse(localStorage.getItem('oz_bets') || '[]'),
-            currentLeague: 'premier'
+            currentLeague: 'premier',
+            h2hData: null,
+            isLoading: false
         };
+
+        // ===== API НАСТРОЙКИ =====
+        const API_KEY = '123';
+        const API_BASE = 'https://api.football-data.org/v4';
 
         // ===== ВСПОМОГАТЕЛЬНЫЕ =====
         function $(id) { return document.getElementById(id); }
@@ -650,6 +714,136 @@
             });
         }
 
+        // ===== ЗАГРУЗКА H2H =====
+        async function loadH2H() {
+            const homeTeam = $('homeTeamH2H').value.trim();
+            const awayTeam = $('awayTeamH2H').value.trim();
+
+            if (!homeTeam || !awayTeam) {
+                showToast('⚠️ Введите обе команды!', 'error');
+                return;
+            }
+
+            if (state.isLoading) return;
+
+            // ПОКАЗЫВАЕМ ИНДИКАТОР ЗАГРУЗКИ
+            state.isLoading = true;
+            const btn = $('loadH2HBtn');
+            const btnText = $('loadBtnText');
+            const spinner = $('loadSpinner');
+            const status = $('h2hStatus');
+            const results = $('h2hResults');
+
+            btn.disabled = true;
+            btnText.textContent = 'Загрузка...';
+            spinner.style.display = 'inline-block';
+            status.innerHTML = '<span class="loading-text"><span class="spinner-small"></span> Загружаем данные с API...</span>';
+            results.innerHTML = '';
+
+            try {
+                // Ищем ID команд
+                const searchUrl = `${API_BASE}/teams?search=${encodeURIComponent(homeTeam)}`;
+                const response = await fetch(searchUrl, {
+                    headers: { 'X-Auth-Token': API_KEY }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 429) {
+                        showToast('⚠️ Превышен лимит запросов (10/мин). Подождите.', 'error');
+                    } else if (response.status === 403) {
+                        showToast('⚠️ Неверный API ключ. Используйте "123"', 'error');
+                    } else {
+                        showToast(`⚠️ Ошибка API: ${response.status}`, 'error');
+                    }
+                    status.textContent = '❌ Ошибка загрузки. Используйте ручной ввод.';
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!data.teams || data.teams.length === 0) {
+                    status.textContent = `❌ Команда "${homeTeam}" не найдена. Попробуйте точное название.`;
+                    return;
+                }
+
+                const teamId = data.teams[0].id;
+
+                // Загружаем матчи команды
+                const matchesUrl = `${API_BASE}/teams/${teamId}/matches?limit=10&status=FINISHED`;
+                const matchesResponse = await fetch(matchesUrl, {
+                    headers: { 'X-Auth-Token': API_KEY }
+                });
+
+                if (!matchesResponse.ok) {
+                    status.textContent = '❌ Не удалось загрузить матчи.';
+                    return;
+                }
+
+                const matchesData = await matchesResponse.json();
+
+                if (!matchesData.matches || matchesData.matches.length === 0) {
+                    status.textContent = `❌ Нет завершенных матчей у команды "${homeTeam}".`;
+                    return;
+                }
+
+                // Фильтруем матчи с указанным соперником
+                const filteredMatches = matchesData.matches.filter(m => {
+                    const home = m.homeTeam.name.toLowerCase();
+                    const away = m.awayTeam.name.toLowerCase();
+                    const opponent = awayTeam.toLowerCase();
+                    return home.includes(opponent) || away.includes(opponent);
+                }).slice(0, 5);
+
+                if (filteredMatches.length === 0) {
+                    status.textContent = `❌ Нет очных встреч между "${homeTeam}" и "${awayTeam}" за последние матчи.`;
+                    return;
+                }
+
+                // Парсим результаты
+                const h2hData = filteredMatches.map(m => {
+                    const home = m.homeTeam.name;
+                    const away = m.awayTeam.name;
+                    const homeScore = m.score.fullTime.home || 0;
+                    const awayScore = m.score.fullTime.away || 0;
+                    const oz = homeScore > 0 && awayScore > 0;
+                    return { home, away, homeScore, awayScore, oz, date: m.utcDate };
+                });
+
+                state.h2hData = h2hData;
+
+                // Отображаем результаты
+                status.textContent = `✅ Найдено ${h2hData.length} очных встреч:`;
+                results.innerHTML = h2hData.map(m => {
+                    const ozClass = m.oz ? 'oz' : 'no-oz';
+                    const ozText = m.oz ? '✅ ОЗ' : '❌ Нет';
+                    return `<div class="h2h-item">
+                        <span class="score">${m.home} ${m.homeScore}:${m.awayScore} ${m.away}</span>
+                        <span class="${ozClass}">${ozText}</span>
+                    </div>`;
+                }).join('');
+
+                // Автоматически подставляем голы
+                const lastMatch = h2hData[0];
+                $('homeGoals').value = lastMatch.homeScore;
+                $('awayGoals').value = lastMatch.awayScore;
+                updateSum();
+                calculate();
+
+                showToast(`✅ Загружено ${h2hData.length} матчей!`, 'success');
+
+            } catch (error) {
+                console.error('H2H Error:', error);
+                status.textContent = '❌ Ошибка сети. Проверьте интернет.';
+                showToast('⚠️ Ошибка загрузки', 'error');
+            } finally {
+                // СКРЫВАЕМ ИНДИКАТОР ЗАГРУЗКИ
+                state.isLoading = false;
+                btn.disabled = false;
+                btnText.textContent = '📊 Загрузить H2H';
+                spinner.style.display = 'none';
+            }
+        }
+
         // ===== РАСЧЕТ =====
         function calculate() {
             const home = safeNum($('homeGoals').value);
@@ -666,6 +860,13 @@
             let prob = both ? 75 : 25;
             prob = (prob + (league.oz || 60)) / 2;
 
+            // Если есть данные H2H — корректируем вероятность
+            if (state.h2hData && state.h2hData.length > 0) {
+                const h2hOzCount = state.h2hData.filter(m => m.oz).length;
+                const h2hProb = (h2hOzCount / state.h2hData.length) * 100;
+                prob = (prob + h2hProb) / 2;
+            }
+
             if (total > 2) prob += 10;
             if (total < 1) prob -= 20;
             if (total === 0) prob = 5;
@@ -679,7 +880,6 @@
             $('resValue2').textContent = prob + '%';
             $('resValue3').textContent = hasBk ? bkLine : '--';
 
-            // Индекс доверия
             let confidence = prob;
             if (hasBk && ((both && bkLine > 0.5) || (!both && bkLine < 0.5))) confidence += 10;
             confidence = Math.min(100, Math.max(0, Math.round(confidence)));
@@ -691,7 +891,6 @@
             else if (confidence > 40) fill.style.background = 'linear-gradient(90deg, #f1c40f, #f39c12)';
             else fill.style.background = 'linear-gradient(90deg, #e74c3c, #c0392b)';
 
-            // Совет
             const advice = $('resAdvice');
             if (prob > 70) {
                 advice.textContent = `✅ Высокая вероятность ${prob}% — ОЗ`;
@@ -704,7 +903,6 @@
                 advice.className = 'advice bad';
             }
 
-            // Сравнение с БК
             if (hasBk) {
                 const bkProb = bkLine > 0.5 ? 'ОЗ' : 'НЗ';
                 advice.textContent += ` | БК: ${bkProb}`;
@@ -718,7 +916,12 @@
             renderInsights();
         }
 
-        // ===== СОХРАНИТЬ СТАВКУ =====
+        // ===== ОСТАЛЬНЫЕ ФУНКЦИИ (без изменений) =====
+        function updateSum() {
+            const total = safeNum($('homeGoals').value) + safeNum($('awayGoals').value);
+            $('sumDisplay').textContent = total;
+        }
+
         function saveBet() {
             const home = safeNum($('homeGoals').value);
             const away = safeNum($('awayGoals').value);
@@ -730,7 +933,7 @@
             }
 
             const both = home > 0 && away > 0;
-            const match = `${$('homeName').value || 'Хозяева'} - ${$('awayName').value || 'Гости'}`;
+            const match = `${$('homeTeamH2H').value || 'Хозяева'} - ${$('awayTeamH2H').value || 'Гости'}`;
             const bkLine = safeNum($('bkLine').value);
             const confidence = parseInt($('confidenceLabel').textContent) || 50;
 
@@ -757,7 +960,6 @@
             showToast('✅ Ставка сохранена!', 'success');
         }
 
-        // ===== ИСТОРИЯ =====
         function renderHistory() {
             const list = $('historyList');
             if (state.bets.length === 0) {
@@ -776,7 +978,6 @@
             }).join('');
         }
 
-        // ===== СТАТИСТИКА =====
         function renderStats() {
             const total = state.bets.length;
             const wins = state.bets.filter(b => b.outcome === 'win').length;
@@ -790,7 +991,6 @@
             $('statROI').textContent = total > 0 ? Math.round((balance / total) * 100) + '%' : '0%';
         }
 
-        // ===== ГРАФИК =====
         function renderChart() {
             const chart = $('chartBars');
             const last20 = state.bets.slice(-20);
@@ -812,7 +1012,6 @@
             }).join('');
         }
 
-        // ===== ВЫВОДЫ =====
         function renderInsights() {
             const container = $('insightsContent');
             const total = state.bets.length;
@@ -833,10 +1032,15 @@
                 text += `<br>⚽ ОЗ: ${ozRate}% (${ozWins}/${ozTotal})`;
             }
 
+            // Если есть H2H данные
+            if (state.h2hData && state.h2hData.length > 0) {
+                const h2hOz = state.h2hData.filter(m => m.oz).length;
+                text += `<br>📊 H2H: ${h2hOz}/${state.h2hData.length} ОЗ (${Math.round((h2hOz/state.h2hData.length)*100)}%)`;
+            }
+
             container.innerHTML = `<div style="font-size:12px;padding:2px 0;">${text}</div>`;
         }
 
-        // ===== РЕДАКТИРОВАНИЕ =====
         function editBet(index) {
             const b = state.bets[index];
             const newOutcome = prompt(`Исход для ${b.match}:\n1 - Выиграла\n2 - Проиграла\n3 - Неизвестно`, '3');
@@ -853,7 +1057,6 @@
             showToast('✅ Обновлено', 'success');
         }
 
-        // ===== ОЧИСТКА =====
         function clearAll() {
             $('homeGoals').value = '0';
             $('awayGoals').value = '0';
@@ -866,6 +1069,9 @@
             $('resAdvice').className = 'advice info';
             $('confidenceLabel').textContent = '0%';
             $('confidenceFill').style.width = '0%';
+            $('h2hResults').innerHTML = '';
+            $('h2hStatus').textContent = 'Введите команды и нажмите "Загрузить H2H"';
+            state.h2hData = null;
             showToast('🗑️ Очищено', 'info');
         }
 
@@ -901,15 +1107,17 @@
         };
 
         $('homeGoals').oninput = function() {
-            const total = safeNum(this.value) + safeNum($('awayGoals').value);
-            $('sumDisplay').textContent = total;
-            if (total > 0) calculate();
+            updateSum();
+            if (safeNum(this.value) > 0 || safeNum($('awayGoals').value) > 0) {
+                calculate();
+            }
         };
 
         $('awayGoals').oninput = function() {
-            const total = safeNum($('homeGoals').value) + safeNum(this.value);
-            $('sumDisplay').textContent = total;
-            if (total > 0) calculate();
+            updateSum();
+            if (safeNum($('homeGoals').value) > 0 || safeNum(this.value) > 0) {
+                calculate();
+            }
         };
 
         $('bkLine').oninput = function() {
@@ -917,6 +1125,10 @@
                 calculate();
             }
         };
+
+        // Enter для загрузки H2H
+        $('homeTeamH2H').onkeydown = function(e) { if (e.key === 'Enter') loadH2H(); };
+        $('awayTeamH2H').onkeydown = function(e) { if (e.key === 'Enter') loadH2H(); };
 
         // ===== ИНИЦИАЛИЗАЦИЯ =====
         renderLeagues();
@@ -926,9 +1138,10 @@
         renderInsights();
 
         console.log('⚽ ОЗ-Апп PRO — РАБОТАЕТ!');
-        console.log('🌍 Всего лиг: ' + Object.keys(ALL_LEAGUES).length);
-        console.log('✅ Введите голы и нажмите "Рассчитать"');
+        console.log('🌍 Лиг: ' + Object.keys(ALL_LEAGUES).length);
+        console.log('🔑 API ключ: ' + API_KEY);
+        console.log('✅ Введите команды и нажмите "Загрузить H2H"');
     </script>
 
 </body>
-</html> 
+</html>
