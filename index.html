@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ОЗ-Апп PRO</title>
     <style>
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:system-ui,sans-serif;background:#0b0e14;color:#e0e0e0;max-width:480px;margin:0 auto;padding:12px 14px 80px;min-height:100vh}
+        *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+        body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#0b0e14;color:#e0e0e0;max-width:480px;margin:0 auto;padding:12px 14px 80px;min-height:100vh}
         body.light{background:#f0f2f5;color:#1a1a1a}
         body.light input,body.light select,body.light .card{background:#fff!important;color:#1a1a1a!important;border-color:#d0d5dd!important}
         .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px}
@@ -55,7 +55,6 @@
         .h2h-item .oz{color:#2ecc71}
         .h2h-item .no-oz{color:#e74c3c}
         .h2h-item .score{font-weight:600}
-        .h2h-item .del{background:0;border:0;color:#e74c3c;font-size:14px;cursor:pointer}
         .history-item{background:#1a1f2a;padding:6px 10px;border-radius:8px;display:flex;justify-content:space-between;font-size:12px;margin:2px 0;cursor:pointer;transition:.15s}
         .history-item:active{transform:scale(.98)}
         .history-item .win{color:#2ecc71}
@@ -185,15 +184,14 @@
 
     <script>
         // ================================================================
-        // ОЗ-Апп PRO — через рабочий прокси
+        // ОЗ-Апп PRO — С ВАШИМ СОБСТВЕННЫМ СЕРВЕРОМ НА RENDER
         // ================================================================
 
         const API_KEY = '9ec6d6fe53864e81b6ca7f802926e838';
-        const PROXY_URL = 'https://api.allorigins.win/raw?url=https://api.football-data.org/v4';
+        const PROXY_URL = 'https://oz-proxy.onrender.com/api';
 
         const ALL_LEAGUES = {
             'premier': { name: '🏴 АПЛ', oz: 65 },
-            'championship': { name:🏴 Чемпионшип', oz: 62 },
             'laliga': { name: '🇪🇸 Ла Лига', oz: 60 },
             'bundesliga': { name: '🇩🇪 Бундеслига', oz: 68 },
             'seriea': { name: '🇮🇹 Серия А', oz: 62 },
@@ -253,6 +251,7 @@
             results.innerHTML = '';
 
             try {
+                // Поиск команды через ваш сервер
                 const searchUrl = `${PROXY_URL}/teams?search=${encodeURIComponent(homeTeam)}`;
                 const response = await fetch(searchUrl, {
                     headers: { 'X-Auth-Token': API_KEY }
@@ -643,9 +642,9 @@
         renderInsights();
         updateSum();
 
-        console.log('⚽ ОЗ-Апп PRO с рабочим прокси!');
+        console.log('⚽ ОЗ-Апп PRO с вашим сервером!');
         console.log('🔑 API ключ: ' + API_KEY);
-        console.log('🌐 Прокси: ' + PROXY_URL);
+        console.log('🌐 Ваш сервер: ' + PROXY_URL);
         console.log('✅ Введите команды на английском и нажмите "Загрузить H2H"');
     </script>
 </body>
