@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ОЗ-Апп PRO</title>
+    <title>Квантум — Тотал, Фора, ОЗ</title>
+    <!-- 🆕 ИКОНКА ПРИЛОЖЕНИЯ -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
     <style>
         *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
         body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:#0b0e14;color:#e0e0e0;max-width:480px;margin:0 auto;padding:12px 14px 80px;min-height:100vh}
         body.light{background:#f0f2f5;color:#1a1a1a}
         body.light input,body.light select,body.light .card{background:#fff!important;color:#1a1a1a!important;border-color:#d0d5dd!important}
+        body.light .mode-btn{background:#f0f2f5!important;color:#555!important;border-color:#d0d5dd!important}
+        body.light .mode-btn.active{background:#f7931a!important;color:#000!important;border-color:#f7931a!important}
         .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px}
         .header h1{font-size:18px;color:#f7931a}
+        .header h1 span{font-size:9px;color:#555;font-weight:400}
         .header-actions button{background:0;border:0;color:#aaa;font-size:18px;cursor:pointer;padding:4px}
         .card{background:#1a1f2a;border:1px solid #2a3140;border-radius:12px;padding:10px 12px;margin:4px 0}
         .card-title{font-size:12px;font-weight:700;color:#f7931a;margin-bottom:4px}
         select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid #2a3140;background:#0b0e14;color:#e0e0e0;font-size:13px;outline:0}
         select:focus{border-color:#f7931a}
+        .mode-wrap{display:flex;gap:4px;margin:6px 0}
+        .mode-btn{flex:1;padding:8px 4px;border-radius:8px;border:1px solid #2a3140;background:#1a1f2a;color:#888;font-weight:600;font-size:12px;cursor:pointer;transition:.2s;text-align:center}
+        .mode-btn.active{background:#f7931a;color:#000;border-color:#f7931a}
         .input-row{display:flex;gap:8px;margin:4px 0}
         .input-row .field{flex:1}
         .input-row .field label{font-size:10px;color:#888;display:block}
@@ -27,11 +35,11 @@
         .btn{width:100%;padding:12px;border-radius:10px;border:0;font-weight:700;font-size:16px;cursor:pointer;margin:4px 0;transition:.15s}
         .btn:active{transform:scale(.97)}
         .btn-calc{background:#f7931a;color:#000}
-        .btn-save{background:#f7931a;color:#000;flex:2}
+        .btn-save{background:#2ecc71;color:#000;flex:2}
         .btn-clear{background:#3a1a1a;color:#ff8a8a;flex:1}
-        .btn-api{background:#3498db;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px}
-        .btn-api:disabled{opacity:.5;cursor:not-allowed}
         .action-row{display:flex;gap:8px}
+        .btn-api{background:#3498db;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;border-radius:10px;border:0;font-weight:700;font-size:16px;cursor:pointer;margin:4px 0;transition:.15s}
+        .btn-api:disabled{opacity:.5;cursor:not-allowed}
         .result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center}
         .result-grid .label{font-size:9px;color:#888}
         .result-grid .value{font-size:20px;font-weight:700;color:#f7931a}
@@ -78,7 +86,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>⚽ ОЗ-Апп PRO</h1>
+        <h1>⚛️ Квантум <span>v1.0</span></h1>
         <div class="header-actions">
             <button onclick="toggleTheme()">🌙</button>
             <button onclick="resetAll()">🔄</button>
@@ -90,8 +98,13 @@
         <select id="leagueSelect"></select>
     </div>
 
-    <div class="card">
-        <div class="card-title">⚽ Введите голы</div>
+    <div class="mode-wrap" id="modeTabs">
+        <button class="mode-btn active" data-mode="total" onclick="switchMode('total',this)">⚽ Тотал</button>
+        <button class="mode-btn" data-mode="fora" onclick="switchMode('fora',this)">⚖️ Фора</button>
+        <button class="mode-btn" data-mode="oz" onclick="switchMode('oz',this)">⚽ ОЗ</button>
+    </div>
+
+    <div id="inputArea">
         <div class="input-row">
             <div class="field"><label>🏠 Хозяева</label><input type="number" id="homeGoals" value="0" min="0" /></div>
             <div class="field"><label>✈️ Гости</label><input type="number" id="awayGoals" value="0" min="0" /></div>
@@ -104,7 +117,7 @@
             <div class="field"><label>🏠 Хозяева</label><input type="text" id="homeTeamH2H" placeholder="Real Madrid" /></div>
             <div class="field"><label>✈️ Гости</label><input type="text" id="awayTeamH2H" placeholder="Barcelona" /></div>
         </div>
-        <button class="btn btn-api" id="loadH2HBtn" onclick="loadH2H()">
+        <button class="btn-api" id="loadH2HBtn" onclick="loadH2H()">
             <span id="loadBtnText">📊 Загрузить H2H</span>
             <span id="loadSpinner" style="display:none;"><span class="spinner"></span></span>
         </button>
@@ -120,6 +133,7 @@
     </div>
 
     <button class="btn btn-calc" onclick="calculate()">⚡ Рассчитать</button>
+
     <div class="action-row">
         <button class="btn btn-save" onclick="saveBet()">💾 Записать</button>
         <button class="btn btn-clear" onclick="clearAll()">🗑️ Очистить</button>
@@ -127,9 +141,9 @@
 
     <div class="card">
         <div class="result-grid">
-            <div><div class="label">Обе забьют</div><div class="value" id="resValue1">--</div></div>
-            <div><div class="label">Вероятность</div><div class="value" id="resValue2">--</div></div>
-            <div><div class="label">Линия БК</div><div class="value" id="resValue3">--</div></div>
+            <div><div class="label" id="resLabel1">Ожидаемый</div><div class="value" id="resValue1">--</div></div>
+            <div><div class="label">Линия БК</div><div class="value" id="resValue2">--</div></div>
+            <div><div class="label">Разница</div><div class="value" id="resValue3">--</div></div>
         </div>
         <div class="advice info" id="resAdvice">⏳ Введите данные для расчёта</div>
         <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-top:4px;">
@@ -140,7 +154,7 @@
     </div>
 
     <div class="bk-row">
-        <label>📈 Линия БК (ОЗ):</label>
+        <label>📈 Линия БК:</label>
         <input type="number" id="bkLine" value="0" step="0.05" />
         <span id="bkComment" style="font-size:12px;font-weight:600;padding:2px 10px;border-radius:12px;">—</span>
     </div>
@@ -175,32 +189,33 @@
 
     <script>
         // ================================================================
-        // ОЗ-Апп PRO — API-Football
+        // КВАНТУМ — Тотал, Фора, ОЗ
         // ================================================================
 
-        // 🔑 ВАШ API КЛЮЧ
+        // 🔑 API КЛЮЧ
         const API_KEY = '9d6bcbd63fcf1b201db31af076113339';
         const PROXY_URL = 'https://oz-proxy.onrender.com/api';
 
-        // 📋 СПИСОК ЛИГ
+        // 📋 ЛИГИ
         const LEAGUES = {
-            '39': { name: '🏴 АПЛ', oz: 65 },
-            '140': { name: '🇪🇸 Ла Лига', oz: 60 },
-            '78': { name: '🇩🇪 Бундеслига', oz: 68 },
-            '135': { name: '🇮🇹 Серия А', oz: 62 },
-            '61': { name: '🇫🇷 Лига 1', oz: 58 },
-            '88': { name: '🇳🇱 Эредивизи', oz: 72 },
-            '94': { name: '🇵🇹 Примейра', oz: 60 },
-            '2': { name: '🇷🇺 РПЛ', oz: 55 },
-            '253': { name: '🇯🇵 J-Лига', oz: 60 },
-            '98': { name: '🇧🇷 Бразильская Серия А', oz: 62 },
-            '9': { name: '🇺🇸 MLS', oz: 68 },
-            '1': { name: '🏆 ЛЧ', oz: 66 }
+            '39': { name: '🏴 АПЛ', oz: 65, avgGoals: 2.8 },
+            '140': { name: '🇪🇸 Ла Лига', oz: 60, avgGoals: 2.6 },
+            '78': { name: '🇩🇪 Бундеслига', oz: 68, avgGoals: 3.0 },
+            '135': { name: '🇮🇹 Серия А', oz: 62, avgGoals: 2.7 },
+            '61': { name: '🇫🇷 Лига 1', oz: 58, avgGoals: 2.5 },
+            '88': { name: '🇳🇱 Эредивизи', oz: 72, avgGoals: 3.2 },
+            '94': { name: '🇵🇹 Примейра', oz: 60, avgGoals: 2.6 },
+            '2': { name: '🇷🇺 РПЛ', oz: 55, avgGoals: 2.2 },
+            '253': { name: '🇯🇵 J-Лига', oz: 60, avgGoals: 2.4 },
+            '98': { name: '🇧🇷 Бразильская Серия А', oz: 62, avgGoals: 2.5 },
+            '9': { name: '🇺🇸 MLS', oz: 68, avgGoals: 2.8 },
+            '1': { name: '🏆 ЛЧ', oz: 66, avgGoals: 2.8 }
         };
 
         let state = {
-            bets: JSON.parse(localStorage.getItem('oz_bets') || '[]'),
+            bets: JSON.parse(localStorage.getItem('quantum_bets') || '[]'),
             currentLeague: '39',
+            currentMode: 'total',
             h2hData: null,
             isLoading: false
         };
@@ -236,7 +251,32 @@
             });
         }
 
-        // ЗАГРУЗКА H2H
+        function switchMode(mode, btn) {
+            state.currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const labels = {
+                'total': 'Ожидаемый тотал',
+                'fora': 'Ожидаемая фора',
+                'oz': 'Обе забьют'
+            };
+            $('resLabel1').textContent = labels[mode] || 'Ожидаемый';
+
+            $('resValue1').textContent = '--';
+            $('resValue2').textContent = '--';
+            $('resValue3').textContent = '--';
+            $('resAdvice').textContent = '⏳ Введите данные для расчёта';
+            $('resAdvice').className = 'advice info';
+            $('confidenceLabel').textContent = '0%';
+            $('confidenceFill').style.width = '0%';
+
+            if (safeNum($('homeGoals').value) > 0 || safeNum($('awayGoals').value) > 0 || (state.h2hData && state.h2hData
+                    .length > 0)) {
+                calculate();
+            }
+        }
+
         async function loadH2H() {
             const homeTeam = $('homeTeamH2H').value.trim();
             const awayTeam = $('awayTeamH2H').value.trim();
@@ -262,8 +302,8 @@
             results.innerHTML = '';
 
             try {
-                // 1. Поиск ID первой команды
-                const searchUrl = `${PROXY_URL}?url=https://v3.football.api-sports.io/teams?search=${encodeURIComponent(homeTeam)}`;
+                const searchUrl =
+                    `${PROXY_URL}?url=https://v3.football.api-sports.io/teams?search=${encodeURIComponent(homeTeam)}`;
                 const response = await fetch(searchUrl, {
                     headers: { 'x-apisports-key': API_KEY }
                 });
@@ -283,8 +323,8 @@
 
                 const homeId = data.response[0].team.id;
 
-                // 2. Поиск ID второй команды
-                const searchUrl2 = `${PROXY_URL}?url=https://v3.football.api-sports.io/teams?search=${encodeURIComponent(awayTeam)}`;
+                const searchUrl2 =
+                    `${PROXY_URL}?url=https://v3.football.api-sports.io/teams?search=${encodeURIComponent(awayTeam)}`;
                 const response2 = await fetch(searchUrl2, {
                     headers: { 'x-apisports-key': API_KEY }
                 });
@@ -303,8 +343,8 @@
 
                 const awayId = data2.response[0].team.id;
 
-                // 3. Загрузка H2H
-                const h2hUrl = `${PROXY_URL}?url=https://v3.football.api-sports.io/fixtures/headtohead?h2h=${homeId}-${awayId}&last=5`;
+                const h2hUrl =
+                    `${PROXY_URL}?url=https://v3.football.api-sports.io/fixtures/headtohead?h2h=${homeId}-${awayId}&last=10`;
                 const h2hResponse = await fetch(h2hUrl, {
                     headers: { 'x-apisports-key': API_KEY }
                 });
@@ -327,6 +367,8 @@
                     homeScore: m.goals.home || 0,
                     awayScore: m.goals.away || 0,
                     oz: (m.goals.home || 0) > 0 && (m.goals.away || 0) > 0,
+                    total: (m.goals.home || 0) + (m.goals.away || 0),
+                    diff: (m.goals.home || 0) - (m.goals.away || 0),
                     date: m.fixture.date
                 }));
 
@@ -379,31 +421,104 @@
             }
 
             const league = getLeague();
-            const both = home > 0 && away > 0;
-            let prob = both ? 75 : 25;
-            prob = (prob + (league.oz || 60)) / 2;
-
-            if (state.h2hData && state.h2hData.length > 0) {
-                const h2hOzCount = state.h2hData.filter(m => m.oz).length;
-                const h2hProb = (h2hOzCount / state.h2hData.length) * 100;
-                prob = (prob + h2hProb) / 2;
-            }
-
-            if (total > 2) prob += 10;
-            if (total < 1) prob -= 20;
-            if (total === 0) prob = 5;
-
-            prob = Math.min(100, Math.max(0, Math.round(prob)));
-
+            const mode = state.currentMode;
             const bkLine = safeNum($('bkLine').value);
             const hasBk = bkLine !== 0;
 
-            $('resValue1').textContent = both ? '✅ Да' : '❌ Нет';
-            $('resValue2').textContent = prob + '%';
-            $('resValue3').textContent = hasBk ? bkLine : '--';
+            let result = { value: 0, prob: 50, advice: '', className: 'info' };
 
-            let confidence = prob;
-            if (hasBk && ((both && bkLine > 0.5) || (!both && bkLine < 0.5))) confidence += 10;
+            if (mode === 'oz') {
+                const both = home > 0 && away > 0;
+                let prob = both ? 75 : 25;
+                prob = (prob + (league.oz || 60)) / 2;
+                if (state.h2hData && state.h2hData.length > 0) {
+                    const h2hOzCount = state.h2hData.filter(m => m.oz).length;
+                    const h2hProb = (h2hOzCount / state.h2hData.length) * 100;
+                    prob = (prob + h2hProb) / 2;
+                }
+                if (total > 2) prob += 10;
+                if (total < 1) prob -= 20;
+                if (total === 0) prob = 5;
+                prob = Math.min(100, Math.max(0, Math.round(prob)));
+                result.value = both ? '✅ Да' : '❌ Нет';
+                result.prob = prob;
+                if (prob > 70) { result.advice = `✅ Высокая вероятность ${prob}% — ОЗ`;
+                    result.className = 'good'; } else if (prob > 40) { result.advice = `🟡 Средняя вероятность ${prob}%`;
+                    result.className = 'warn'; } else { result.advice = `🔴 Низкая вероятность ${prob}% — НЗ`;
+                    result.className = 'bad'; }
+            } else if (mode === 'total') {
+                let expected = total;
+                if (total === 0) expected = Math.round(league.avgGoals || 2.5);
+                const tempo = total / 2;
+                if (tempo > (league.avgGoals || 2.5) + 0.5) expected += Math.round(total * 0.05);
+                else if (tempo < (league.avgGoals || 2.5) - 0.5) expected -= Math.round(total * 0.05);
+                if (state.h2hData && state.h2hData.length > 0) {
+                    const avgTotal = state.h2hData.reduce((sum, m) => sum + m.total, 0) / state.h2hData.length;
+                    expected = Math.round((expected + avgTotal) / 2);
+                }
+                expected = Math.max(0, Math.round(expected));
+                result.value = expected;
+                result.prob = 50 + Math.min(Math.abs(expected - (league.avgGoals || 2.5)) * 5, 30);
+                if (hasBk) {
+                    const diff = expected - bkLine;
+                    if (Math.abs(diff) > 1) {
+                        const isOver = diff > 0;
+                        result.advice = `${isOver ? '✅ ОВЕР' : '✅ АНДЕР'} (разница ${Math.abs(diff).toFixed(1)})`;
+                        result.className = 'good';
+                    } else {
+                        result.advice = `⏳ Линии близки (разница ${diff.toFixed(1)})`;
+                        result.className = 'warn';
+                    }
+                } else {
+                    result.advice = '📊 Введите линию БК для сравнения';
+                    result.className = 'info';
+                }
+            } else if (mode === 'fora') {
+                const homeTotal = home;
+                const awayTotal = away;
+                let expected = Math.round((homeTotal - awayTotal) / 2);
+                if (total === 0) expected = 0;
+                if (state.h2hData && state.h2hData.length > 0) {
+                    const avgDiff = state.h2hData.reduce((sum, m) => sum + m.diff, 0) / state.h2hData.length;
+                    expected = Math.round((expected + avgDiff) / 2);
+                }
+                if (Math.abs(expected) < 0.5) expected = 0;
+                expected = Math.round(expected * 2) / 2;
+                result.value = (expected >= 0 ? '+' : '') + expected;
+                result.prob = 50 + Math.min(Math.abs(expected) * 10, 30);
+                if (hasBk) {
+                    const diff = expected - bkLine;
+                    if (Math.abs(diff) > 0.5) {
+                        const isOver = diff > 0;
+                        result.advice = `${isOver ? '✅ ФОРА ХОЗЯЕВ' : '✅ ФОРА ГОСТЕЙ'} (разница ${Math.abs(diff).toFixed(1)})`;
+                        result.className = 'good';
+                    } else {
+                        result.advice = `⏳ Линии близки (разница ${diff.toFixed(1)})`;
+                        result.className = 'warn';
+                    }
+                } else {
+                    result.advice = '📊 Введите линию БК для сравнения';
+                    result.className = 'info';
+                }
+            }
+
+            $('resValue1').textContent = result.value;
+            $('resValue2').textContent = hasBk ? bkLine : '--';
+
+            if (hasBk && mode !== 'oz') {
+                const diff = safeNum(result.value) - bkLine;
+                $('resValue3').textContent = (diff >= 0 ? '+' : '') + diff.toFixed(1);
+            } else if (mode === 'oz') {
+                $('resValue3').textContent = hasBk ? (bkLine > 0.5 ? '✅ Да' : '❌ Нет') : '--';
+            } else {
+                $('resValue3').textContent = '--';
+            }
+
+            let confidence = result.prob || 50;
+            if (hasBk && mode === 'oz' && ((result.value === '✅ Да' && bkLine > 0.5) || (result.value === '❌ Нет' &&
+                    bkLine < 0.5))) confidence += 10;
+            if (mode === 'total' && hasBk && Math.abs(safeNum(result.value) - bkLine) > 1) confidence += 10;
+            if (mode === 'fora' && hasBk && Math.abs(safeNum(result.value) - bkLine) > 0.5) confidence += 10;
             confidence = Math.min(100, Math.max(0, Math.round(confidence)));
 
             $('confidenceLabel').textContent = confidence + '%';
@@ -413,22 +528,9 @@
             else if (confidence > 40) fill.style.background = 'linear-gradient(90deg, #f1c40f, #f39c12)';
             else fill.style.background = 'linear-gradient(90deg, #e74c3c, #c0392b)';
 
-            const advice = $('resAdvice');
-            if (prob > 70) {
-                advice.textContent = `✅ Высокая вероятность ${prob}% — ОЗ`;
-                advice.className = 'advice good';
-            } else if (prob > 40) {
-                advice.textContent = `🟡 Средняя вероятность ${prob}%`;
-                advice.className = 'advice warn';
-            } else {
-                advice.textContent = `🔴 Низкая вероятность ${prob}% — НЗ`;
-                advice.className = 'advice bad';
-            }
-
-            if (hasBk) {
-                const bkProb = bkLine > 0.5 ? 'ОЗ' : 'НЗ';
-                advice.textContent += ` | БК: ${bkProb}`;
-            }
+            const adviceEl = $('resAdvice');
+            adviceEl.textContent = result.advice || '⏳ Анализ...';
+            adviceEl.className = 'advice ' + result.className;
 
             $('sumDisplay').textContent = total;
 
@@ -453,18 +555,20 @@
                 return;
             }
 
-            const both = home > 0 && away > 0;
+            const mode = state.currentMode;
             const match = `${$('homeTeamH2H').value || 'Хозяева'} - ${$('awayTeamH2H').value || 'Гости'}`;
             const bkLine = safeNum($('bkLine').value);
             const confidence = parseInt($('confidenceLabel').textContent) || 50;
+            const value = $('resValue1').textContent;
 
             const bet = {
                 id: Date.now(),
                 date: new Date().toLocaleString(),
                 match: match,
+                mode: mode,
+                value: value,
                 home: home,
                 away: away,
-                oz: both,
                 bkLine: bkLine,
                 confidence: confidence,
                 outcome: 'pending',
@@ -472,7 +576,7 @@
             };
 
             state.bets.push(bet);
-            localStorage.setItem('oz_bets', JSON.stringify(state.bets));
+            localStorage.setItem('quantum_bets', JSON.stringify(state.bets));
 
             renderHistory();
             renderStats();
@@ -487,13 +591,14 @@
                 list.innerHTML = '<div class="text-muted text-center" style="padding:10px 0;">Нет ставок</div>';
                 return;
             }
+            const modeNames = { 'total': 'Тотал', 'fora': 'Фора', 'oz': 'ОЗ' };
             list.innerHTML = state.bets.slice().reverse().map((b, i) => {
                 const idx = state.bets.length - 1 - i;
                 const cls = b.outcome === 'win' ? 'win' : b.outcome === 'loss' ? 'loss' : 'pending';
                 const emoji = b.outcome === 'win' ? '✅' : b.outcome === 'loss' ? '❌' : '⏳';
-                const ozText = b.oz ? '✅ Да' : '❌ Нет';
+                const modeName = modeNames[b.mode] || b.mode;
                 return `<div class="history-item" onclick="editBet(${idx})">
-                    <div><b>${b.match}</b>: ${ozText}</div>
+                    <div><b>${modeName}</b>: ${b.value}</div>
                     <div><span class="${cls}">${emoji} ${b.resultText || '⏳'}</span></div>
                 </div>`;
             }).join('');
@@ -546,17 +651,20 @@
             if (rate >= 60) text = '🔥 ' + text;
             else if (rate < 40 && total >= 3) text = '⚠️ ' + text;
 
-            const ozWins = state.bets.filter(b => b.oz === true && b.outcome === 'win').length;
-            const ozTotal = state.bets.filter(b => b.oz === true).length;
-            if (ozTotal >= 3) {
-                const ozRate = Math.round((ozWins / ozTotal) * 100);
-                text += `<br>⚽ ОЗ: ${ozRate}% (${ozWins}/${ozTotal})`;
-            }
-
-            if (state.h2hData && state.h2hData.length > 0) {
-                const h2hOz = state.h2hData.filter(m => m.oz).length;
-                text += `<br>📊 H2H: ${h2hOz}/${state.h2hData.length} ОЗ (${Math.round((h2hOz/state.h2hData.length)*100)}%)`;
-            }
+            const modeNames = { 'total': 'Тотал', 'fora': 'Фора', 'oz': 'ОЗ' };
+            const byMode = {};
+            state.bets.forEach(b => {
+                if (!byMode[b.mode]) byMode[b.mode] = { total: 0, wins: 0 };
+                byMode[b.mode].total++;
+                if (b.outcome === 'win') byMode[b.mode].wins++;
+            });
+            Object.keys(byMode).forEach(mode => {
+                const data = byMode[mode];
+                if (data.total >= 2) {
+                    const r = Math.round((data.wins / data.total) * 100);
+                    text += `<br>${modeNames[mode] || mode}: ${r}% (${data.wins}/${data.total})`;
+                }
+            });
 
             container.innerHTML = `<div style="font-size:12px;padding:2px 0;">${text}</div>`;
         }
@@ -569,7 +677,7 @@
                 b.resultText = '✅ Выигрыш'; } else if (newOutcome === '2') { b.outcome = 'loss';
                 b.resultText = '❌ Проигрыш'; } else { b.outcome = 'pending';
                 b.resultText = '⏳ Ожидание'; }
-            localStorage.setItem('oz_bets', JSON.stringify(state.bets));
+            localStorage.setItem('quantum_bets', JSON.stringify(state.bets));
             renderHistory();
             renderStats();
             renderChart();
@@ -598,7 +706,7 @@
         function clearHistory() {
             if (!confirm('Удалить всю историю?')) return;
             state.bets = [];
-            localStorage.setItem('oz_bets', JSON.stringify(state.bets));
+            localStorage.setItem('quantum_bets', JSON.stringify(state.bets));
             renderHistory();
             renderStats();
             renderChart();
@@ -658,10 +766,10 @@
         renderInsights();
         updateSum();
 
-        console.log('⚽ ОЗ-Апп PRO с API-Football!');
+        console.log('⚛️ КВАНТУМ — Тотал, Фора, ОЗ!');
         console.log('🔑 API ключ: ' + API_KEY);
-        console.log('🌐 Прокси: ' + PROXY_URL);
-        console.log('✅ Доступно 100+ лиг!');
+        console.log('✅ Доступно 100+ лиг');
+        console.log('📊 3 режима: Тотал, Фора, ОЗ');
     </script>
 </body>
 </html>
