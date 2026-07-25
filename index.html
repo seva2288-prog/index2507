@@ -1,0 +1,2722 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Футбол-Апп PRO 3.0</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #0b0e14;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+        body.light {
+            background: #f0f2f5;
+            color: #1a1a1a;
+        }
+        body.light .app-wrapper {
+            background: #f0f2f5;
+        }
+        body.light .header {
+            background: #f0f2f5;
+        }
+        body.light .screen {
+            background: #f0f2f5;
+        }
+        body.light .swipe-indicator {
+            background: #f0f2f5;
+        }
+        body.light .input-grid input {
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            border: 1px solid #d0d5dd !important;
+        }
+        body.light .input-row-custom .field input {
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            border: 1px solid #d0d5dd !important;
+        }
+        body.light .total-display-custom {
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            border: 1px solid #d0d5dd !important;
+        }
+        body.light .total-display-custom .value {
+            color: #f7931a !important;
+        }
+        body.light .bk-row input {
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            border: 1px solid #d0d5dd !important;
+        }
+        body.light .bk-row {
+            background: #ffffff !important;
+        }
+        body.light .live-scoreboard {
+            background: #ffffff !important;
+            border-color: #d0d5dd !important;
+        }
+        body.light .live-scoreboard .period {
+            border-color: #d0d5dd !important;
+            background: #f0f2f5 !important;
+        }
+        body.light .live-scoreboard .sb-score .score-team {
+            background: #f0f2f5 !important;
+        }
+        body.light .mode-tabs button {
+            background: #f0f2f5 !important;
+            color: #555 !important;
+            border-color: #d0d5dd !important;
+        }
+        body.light .mode-tabs button.active {
+            background: #f7931a !important;
+            color: #000 !important;
+            border-color: #f7931a !important;
+        }
+        body.light .history-item {
+            background: #ffffff !important;
+        }
+        body.light .stats-card {
+            background: #ffffff !important;
+        }
+        body.light .chart-container {
+            background: #ffffff !important;
+        }
+        body.light .insights-box {
+            background: #ffffff !important;
+        }
+        body.light .settings-card {
+            background: #ffffff !important;
+        }
+        body.light .modal-box {
+            background: #ffffff !important;
+        }
+        body.light .toast-notification {
+            background: #ffffff;
+            color: #1a1a1a;
+            border-color: #f7931a;
+        }
+        body.light .toast-notification.success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #2ecc71;
+        }
+        body.light .toast-notification.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #e74c3c;
+        }
+        body.light .team-stats {
+            background: #ffffff !important;
+            border-color: #d0d5dd !important;
+        }
+        body.light .confidence-bar {
+            background: #e8ecf1 !important;
+        }
+        body.light .confidence-bar .fill {
+            background: #f7931a !important;
+        }
+        body.light .league-section {
+            background: #ffffff !important;
+            border-color: #d0d5dd !important;
+        }
+        body.light .league-section select {
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            border-color: #d0d5dd !important;
+        }
+        body.light .league-add {
+            background: #f0f2f5 !important;
+            border-color: #d0d5dd !important;
+        }
+        body.light .league-add input {
+            background: #ffffff !important;
+            color: #1a1a1a !important;
+            border-color: #d0d5dd !important;
+        }
+        body.light .custom-league-item {
+            background: #f0f2f5 !important;
+            border-color: #d0d5dd !important;
+        }
+
+        .app-wrapper {
+            max-width: 480px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #0b0e14;
+            position: relative;
+            overflow: hidden;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px 4px 14px;
+            background: #0b0e14;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        .header h1 {
+            font-size: 18px;
+            color: #f7931a;
+            font-weight: 700;
+        }
+        .header .version {
+            font-size: 9px;
+            color: #555;
+            margin-left: 4px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .header-actions button {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            transition: transform 0.15s;
+        }
+        .header-actions button:active {
+            transform: scale(0.9);
+        }
+        .header-actions .theme-btn {
+            font-size: 22px;
+        }
+
+        .screens-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            touch-action: pan-y;
+            scroll-behavior: smooth;
+        }
+        .screen {
+            min-width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 6px 12px 60px 12px;
+            background: #0b0e14;
+            -webkit-overflow-scrolling: touch;
+        }
+        .screen::-webkit-scrollbar {
+            width: 2px;
+        }
+        .screen::-webkit-scrollbar-thumb {
+            background: #2a3140;
+            border-radius: 4px;
+        }
+
+        .live-scoreboard {
+            background: #1a1f2a;
+            border-radius: 14px;
+            border: 1px solid #2a3140;
+            padding: 10px 12px;
+            margin: 4px 0 8px 0;
+        }
+        .live-scoreboard .sb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .live-scoreboard .sb-header .sb-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #f7931a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .live-scoreboard .sb-header .sb-status {
+            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 16px;
+            background: #2a3a2a;
+            color: #2ecc71;
+            font-weight: 600;
+        }
+        .live-scoreboard .sb-header .sb-status.live {
+            background: #3a1a1a;
+            color: #e74c3c;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .live-scoreboard .sb-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .live-scoreboard .sb-teams .team {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .live-scoreboard .sb-teams .team .icon {
+            font-size: 16px;
+        }
+        .live-scoreboard .sb-teams .team .name {
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .live-scoreboard .sb-teams .team .name:hover {
+            color: #f7931a;
+        }
+        .live-scoreboard .sb-teams .vs {
+            color: #555;
+            font-weight: 400;
+        }
+        .live-scoreboard .sb-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            padding: 2px 0 6px 0;
+            border-bottom: 1px solid #2a3140;
+        }
+        .live-scoreboard .sb-score .score-team {
+            background: #1a1f2a;
+            padding: 2px 14px;
+            border-radius: 6px;
+            min-width: 50px;
+            text-align: center;
+        }
+        .live-scoreboard .sb-score .score-team.away {
+            color: #f7931a;
+        }
+        .live-scoreboard .sb-score .score-team.home {
+            color: #2ecc71;
+        }
+        .live-scoreboard .sb-score .score-total {
+            color: #888;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .live-scoreboard .sb-periods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            margin-top: 6px;
+            font-size: 11px;
+        }
+        .live-scoreboard .sb-periods .period {
+            text-align: center;
+            padding: 4px 0;
+            border-radius: 4px;
+            border: 1px solid #2a3140;
+            background: #0b0e14;
+        }
+        .live-scoreboard .sb-periods .period .p-label {
+            color: #555;
+            font-size: 9px;
+        }
+        .live-scoreboard .sb-periods .period .p-score {
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+        .live-scoreboard .sb-periods .period .p-score .home {
+            color: #2ecc71;
+        }
+        .live-scoreboard .sb-periods .period .p-score .away {
+            color: #f7931a;
+        }
+        .live-scoreboard .sb-extra {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 12px;
+            color: #888;
+            padding-top: 4px;
+            border-top: 1px solid #2a3140;
+        }
+        .live-scoreboard .sb-extra .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .live-scoreboard .sb-extra .stat .val {
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        .league-section {
+            background: #1a1f2a;
+            border-radius: 14px;
+            border: 1px solid #2a3140;
+            padding: 10px 12px;
+            margin: 4px 0 8px 0;
+        }
+        .league-section .ls-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #f7931a;
+            margin-bottom: 6px;
+        }
+        .league-section select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #2a3140;
+            background: #0b0e14;
+            color: #e0e0e0;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .league-section select:focus {
+            border-color: #f7931a;
+        }
+        .league-section select option {
+            background: #0b0e14;
+            color: #e0e0e0;
+            padding: 6px;
+        }
+        .league-section select optgroup {
+            background: #0b0e14;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .league-add {
+            background: #1a1f2a;
+            border-radius: 10px;
+            padding: 8px 10px;
+            border: 1px solid #2a3140;
+            margin: 4px 0;
+        }
+        .league-add .la-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .league-add .la-row input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #2a3140;
+            background: #0b0e14;
+            color: #e0e0e0;
+            font-size: 13px;
+            outline: none;
+            min-width: 0;
+        }
+        .league-add .la-row input:focus {
+            border-color: #f7931a;
+        }
+        .league-add .la-row input::placeholder {
+            color: #444;
+            font-size: 11px;
+        }
+        .league-add .la-row .la-small {
+            flex: 0.6;
+            min-width: 60px;
+        }
+        .league-add .la-btn {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            background: #2a3140;
+            color: #aaa;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.15s;
+            margin-top: 4px;
+        }
+        .league-add .la-btn:hover {
+            background: #f7931a;
+            color: #000;
+        }
+        .league-add .la-btn:active {
+            transform: scale(0.97);
+        }
+
+        .custom-leagues {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .custom-league-item {
+            background: #1a1f2a;
+            border: 1px solid #2a3140;
+            border-radius: 20px;
+            padding: 3px 10px 3px 14px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .custom-league-item .cl-remove {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 2px;
+        }
+        .custom-league-item .cl-remove:hover {
+            color: #ff6b6b;
+        }
+
+        .mode-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin: 4px 0 8px 0;
+        }
+        .mode-tabs button {
+            flex: 1;
+            min-width: 35px;
+            padding: 6px 3px;
+            border-radius: 10px;
+            border: 1px solid #2a3140;
+            background: #1a1f2a;
+            color: #888;
+            font-weight: 600;
+            font-size: 10px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .mode-tabs button:active {
+            transform: scale(0.95);
+        }
+        .mode-tabs button.active {
+            background: #f7931a;
+            color: #000;
+            border-color: #f7931a;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            margin: 4px 0;
+        }
+        .input-grid div {
+            text-align: center;
+        }
+        .input-grid div .label {
+            font-size: 9px;
+            color: #888;
+        }
+        .input-grid input {
+            width: 100%;
+            padding: 8px 2px;
+            border-radius: 8px;
+            border: 1px solid #2a3140;
+            background: #1a1f2a;
+            color: #e0e0e0;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+        }
+        .input-grid input:focus {
+            border-color: #f7931a;
+            box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.3);
+        }
+        .input-grid input::placeholder {
+            color: #444;
+            font-size: 12px;
+        }
+
+        .input-row-custom {
+            display: flex;
+            gap: 8px;
+            margin: 4px 0;
+        }
+        .input-row-custom .field {
+            flex: 1;
+        }
+        .input-row-custom .field label {
+            font-size: 10px;
+            color: #888;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .input-row-custom .field input {
+            width: 100%;
+            padding: 10px 8px;
+            border-radius: 10px;
+            border: 1px solid #2a3140;
+            background: #1a1f2a;
+            color: #e0e0e0;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+        }
+        .input-row-custom .field input:focus {
+            border-color: #f7931a;
+            box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.3);
+        }
+        .input-row-custom .field input::placeholder {
+            color: #444;
+            font-size: 12px;
+        }
+
+        .total-display-custom {
+            background: #1a1f2a;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 4px 0;
+            border: 1px solid #2a3140;
+        }
+        .total-display-custom .label {
+            font-size: 10px;
+            color: #888;
+        }
+        .total-display-custom .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f7931a;
+        }
+
+        .calc-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: #f7931a;
+            color: #000;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 4px 0;
+            transition: 0.15s;
+        }
+        .calc-btn:active {
+            transform: scale(0.97);
+        }
+        .calc-btn.calculated {
+            background: #2ecc71;
+            color: #000;
+        }
+        .calc-btn.error {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .save-btn {
+            flex: 2;
+            padding: 12px;
+            border-radius: 14px;
+            border: none;
+            background: #f7931a;
+            color: #000;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .save-btn:active {
+            transform: scale(0.97);
+        }
+
+        .clear-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 14px;
+            border: none;
+            background: #3a1a1a;
+            color: #ff8a8a;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .clear-btn:active {
+            transform: scale(0.97);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 8px;
+            margin: 4px 0;
+        }
+
+        .bk-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: #1a1f2a;
+            padding: 6px 12px;
+            border-radius: 12px;
+            margin: 2px 0 4px 0;
+        }
+        .bk-row label {
+            font-size: 11px;
+            color: #888;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .bk-row input {
+            flex: 1;
+            padding: 6px 8px;
+            border-radius: 8px;
+            border: 1px solid #2a3140;
+            background: #1a1f2a;
+            color: #e0e0e0;
+            font-size: 14px;
+            text-align: center;
+            min-width: 50px;
+            outline: none;
+        }
+        .bk-row input:focus {
+            border-color: #f7931a;
+            box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.3);
+        }
+        .bk-row input::placeholder {
+            color: #444;
+            font-size: 12px;
+        }
+        .bk-row .bk-comment {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 16px;
+            white-space: nowrap;
+        }
+        .bk-row .bk-comment.green {
+            background: #1a3a1a;
+            color: #2ecc71;
+        }
+        .bk-row .bk-comment.red {
+            background: #3a1a1a;
+            color: #e74c3c;
+        }
+        .bk-row .bk-comment.yellow {
+            background: #3a3a1a;
+            color: #f1c40f;
+        }
+
+        .result-card {
+            background: #1a1f2a;
+            border: 1px solid #2a3140;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin: 4px 0;
+        }
+        .result-card .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+        }
+        .result-card .result-grid .item {
+            text-align: center;
+        }
+        .result-card .result-grid .item .label {
+            font-size: 9px;
+            color: #888;
+        }
+        .result-card .result-grid .item .value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f7931a;
+        }
+        .result-card .advice {
+            margin-top: 6px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            background: #1a2a1a;
+            border-left: 4px solid #2ecc71;
+            color: #2ecc71;
+        }
+        .result-card .advice.warning {
+            background: #2a2a1a;
+            border-left-color: #f1c40f;
+            color: #f1c40f;
+        }
+        .result-card .advice.danger {
+            background: #2a1a1a;
+            border-left-color: #e74c3c;
+            color: #e74c3c;
+        }
+        .result-card .advice.info {
+            background: #1a2a3a;
+            border-left-color: #f7931a;
+            color: #f7931a;
+        }
+
+        .team-stats {
+            background: #1a1f2a;
+            border: 1px solid #2a3140;
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin: 4px 0;
+        }
+        .team-stats .ts-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #f7931a;
+            margin-bottom: 4px;
+        }
+        .team-stats .ts-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            padding: 2px 0;
+            border-bottom: 1px solid #2a3140;
+        }
+        .team-stats .ts-row:last-child {
+            border-bottom: none;
+        }
+        .team-stats .ts-row .ts-label {
+            color: #888;
+        }
+        .team-stats .ts-row .ts-value {
+            font-weight: 600;
+        }
+        .team-stats .ts-row .ts-value.green {
+            color: #2ecc71;
+        }
+        .team-stats .ts-row .ts-value.red {
+            color: #e74c3c;
+        }
+
+        .confidence-bar {
+            background: #1a1f2a;
+            border-radius: 8px;
+            height: 8px;
+            margin: 4px 0;
+            overflow: hidden;
+        }
+        .confidence-bar .fill {
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #e74c3c, #f1c40f, #2ecc71);
+        }
+
+        .history-filters {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin: 4px 0 8px 0;
+        }
+        .history-filters button {
+            padding: 4px 10px;
+            border-radius: 16px;
+            border: 1px solid #2a3140;
+            background: transparent;
+            color: #aaa;
+            font-size: 10px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .history-filters button.active {
+            background: #f7931a;
+            color: #000;
+            border-color: #f7931a;
+        }
+        .history-filters button:active {
+            transform: scale(0.95);
+        }
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-bottom: 8px;
+        }
+        .history-item {
+            background: #1a1f2a;
+            padding: 8px 12px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .history-item:active {
+            background: #2a3140;
+            transform: scale(0.99);
+        }
+        .history-item .left {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .history-item .left .date {
+            color: #888;
+            font-size: 10px;
+        }
+        .history-item .left .mode-tag {
+            color: #f7931a;
+            font-weight: 600;
+            font-size: 10px;
+        }
+        .history-item .right {
+            text-align: right;
+            font-weight: 600;
+        }
+        .history-item .right .win {
+            color: #2ecc71;
+        }
+        .history-item .right .loss {
+            color: #e74c3c;
+        }
+        .history-item .right .pending {
+            color: #f1c40f;
+        }
+        .history-item .tag {
+            background: #2a3140;
+            padding: 1px 8px;
+            border-radius: 16px;
+            font-size: 9px;
+            color: #aaa;
+            margin-left: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin: 4px 0;
+        }
+        .stats-card {
+            background: #1a1f2a;
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stats-card .num {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f7931a;
+        }
+        .stats-card .label {
+            font-size: 10px;
+            color: #888;
+        }
+        .stats-card.full {
+            grid-column: span 2;
+        }
+
+        .chart-container {
+            background: #1a1f2a;
+            padding: 10px;
+            border-radius: 12px;
+            margin: 4px 0;
+        }
+        .chart-container .chart-title {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 40px;
+        }
+        .chart-bars .bar {
+            flex: 1;
+            min-width: 4px;
+            border-radius: 2px 2px 0 0;
+            background: #f7931a;
+        }
+        .chart-bars .bar.loss {
+            background: #e74c3c;
+        }
+
+        .insights-box {
+            background: #1a1f2a;
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin: 4px 0 6px 0;
+            border-left: 4px solid #f7931a;
+        }
+        .insights-box .insights-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #f7931a;
+            margin-bottom: 4px;
+        }
+        .insights-box .insight-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 0;
+            font-size: 12px;
+            border-bottom: 1px solid #2a3140;
+        }
+        .insights-box .insight-item:last-child {
+            border-bottom: none;
+        }
+        .insights-box .insight-item .icon {
+            font-size: 14px;
+            min-width: 20px;
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            margin: 2px 0 8px 0;
+        }
+        .settings-header .back-btn {
+            background: none;
+            border: none;
+            color: #f7931a;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0 4px;
+            margin-right: 8px;
+        }
+        .settings-header h2 {
+            font-size: 18px;
+            color: #f7931a;
+        }
+        .settings-card {
+            background: #1a1f2a;
+            padding: 12px 14px;
+            border-radius: 12px;
+            margin: 4px 0;
+        }
+        .settings-card .setting-row {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            margin-bottom: 10px;
+        }
+        .settings-card .setting-row:last-child {
+            margin-bottom: 0;
+        }
+        .settings-card .setting-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f7931a;
+        }
+        .settings-card .setting-desc {
+            font-size: 11px;
+            color: #888;
+            line-height: 1.3;
+        }
+        .settings-card input,
+        .settings-card select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #2a3140;
+            background: #1a1f2a;
+            color: #e0e0e0;
+            font-size: 14px;
+            margin-top: 3px;
+            outline: none;
+        }
+        .settings-card input:focus,
+        .settings-card select:focus {
+            border-color: #f7931a;
+            box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.3);
+        }
+        .settings-card input[type="range"] {
+            padding: 0;
+            background: transparent;
+            accent-color: #f7931a;
+            border: none;
+        }
+        .settings-card .range-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .settings-card .range-row input {
+            flex: 1;
+        }
+        .settings-card .range-row span {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f7931a;
+            min-width: 40px;
+            text-align: right;
+        }
+        .settings-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .settings-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .settings-actions button:active {
+            transform: scale(0.97);
+        }
+        .settings-actions .save-btn-setting {
+            background: #f7931a;
+            color: #000;
+        }
+        .settings-actions .reset-btn-setting {
+            background: #2a3140;
+            color: #fff;
+        }
+
+        .swipe-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 4px 0 8px 0;
+            background: #0b0e14;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 5;
+        }
+        .swipe-indicator .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #2a3140;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .swipe-indicator .dot.active {
+            background: #f7931a;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-box {
+            background: #1a1f2a;
+            padding: 20px;
+            border-radius: 20px;
+            max-width: 340px;
+            width: 100%;
+        }
+        .modal-box h3 {
+            color: #f7931a;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .modal-box label {
+            font-size: 12px;
+            color: #aaa;
+            display: block;
+            margin: 6px 0 2px 0;
+        }
+        .modal-box select,
+        .modal-box input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid #2a3140;
+            background: #1a1f2a;
+            color: #e0e0e0;
+            font-size: 14px;
+            outline: none;
+        }
+        .modal-box select:focus,
+        .modal-box input:focus {
+            border-color: #f7931a;
+            box-shadow: 0 0 0 2px rgba(247, 147, 26, 0.3);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .modal-actions button:active {
+            transform: scale(0.97);
+        }
+        .modal-actions .save {
+            background: #f7931a;
+            color: #000;
+        }
+        .modal-actions .cancel {
+            background: #2a3140;
+            color: #fff;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 500;
+            max-width: 90%;
+            text-align: center;
+            animation: slideUp 0.3s ease;
+            background: #1a2a3a;
+            color: #f7931a;
+            border: 1px solid #f7931a;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .toast-notification.success {
+            background: #1a3a1a;
+            color: #2ecc71;
+            border-color: #2ecc71;
+        }
+        .toast-notification.error {
+            background: #3a1a1a;
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .text-muted {
+            color: #555;
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        @media (max-width: 420px) {
+            .input-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .mode-tabs button {
+                font-size: 9px;
+                padding: 4px 2px;
+                min-width: 30px;
+            }
+            .result-card .result-grid .item .value {
+                font-size: 16px;
+            }
+            .action-row {
+                flex-direction: column;
+            }
+            .save-btn {
+                flex: 1;
+            }
+            .clear-btn {
+                flex: 1;
+            }
+            .league-add .la-row {
+                flex-wrap: wrap;
+            }
+            .league-add .la-row .la-small {
+                flex: 1;
+                min-width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="app-wrapper">
+        <div class="header">
+            <h1>⚽ Футбол-Апп PRO <span class="version">v3.0</span></h1>
+            <div class="header-actions">
+                <button class="theme-btn" onclick="App.toggleTheme()" id="themeBtn">🌙</button>
+                <button onclick="App.exportData()" title="Экспорт">📤</button>
+                <button onclick="App.resetAllData()" title="Сбросить все данные" style="color:#e74c3c;">🔄</button>
+            </div>
+        </div>
+
+        <div class="screens-container" id="screensContainer">
+            <!-- ГЛАВНЫЙ ЭКРАН -->
+            <div class="screen" id="screenMain">
+                <!-- ТАБЛО -->
+                <div class="live-scoreboard" id="scoreboard">
+                    <div class="sb-header">
+                        <div class="sb-title">🏟️ LIVE-МАТЧ</div>
+                        <div class="sb-status" id="sbStatus">⏳ Ожидание</div>
+                    </div>
+                    <div class="sb-teams">
+                        <div class="team"><span class="icon">🏠</span><span class="name" id="homeTeam" onclick="App.showTeamStats('home')">Хозяева</span></div>
+                        <span class="vs">VS</span>
+                        <div class="team"><span class="icon">✈️</span><span class="name" id="awayTeam" onclick="App.showTeamStats('away')">Гости</span></div>
+                    </div>
+                    <div class="sb-score">
+                        <span class="score-team home" id="homeScore">0</span>
+                        <span class="score-total" id="sbTotal">0</span>
+                        <span class="score-team away" id="awayScore">0</span>
+                    </div>
+                    <div class="sb-periods" id="sbPeriods">
+                        <div class="period"><div class="p-label">1-й тайм</div><div class="p-score"><span class="home">0</span><span class="away">0</span></div></div>
+                        <div class="period"><div class="p-label">2-й тайм</div><div class="p-score"><span class="home">0</span><span class="away">0</span></div></div>
+                    </div>
+                    <div class="sb-extra">
+                        <span class="stat">⚡ Режим: <span class="val" id="sbMode">--</span></span>
+                        <span class="stat">📊 Прогноз: <span class="val" id="sbForecast">--</span></span>
+                    </div>
+                </div>
+
+                <!-- ВЫБОР ЛИГИ + ДОБАВЛЕНИЕ -->
+                <div class="league-section">
+                    <div class="ls-title">🏆 Лига</div>
+                    
+                    <select id="leagueSelect" onchange="App.onLeagueChange()">
+                        <optgroup label="🏴 Англия">
+                            <option value="premier">🏴 АПЛ</option>
+                            <option value="championship">🏴 Чемпионшип</option>
+                            <option value="league1">🏴 Лига 1</option>
+                            <option value="league2">🏴 Лига 2</option>
+                        </optgroup>
+                        <optgroup label="🇪🇸 Испания">
+                            <option value="laliga">🇪🇸 Ла Лига</option>
+                            <option value="segunda">🇪🇸 Сегунда</option>
+                        </optgroup>
+                        <optgroup label="🇩🇪 Германия">
+                            <option value="bundesliga">🇩🇪 Бундеслига</option>
+                            <option value="bundesliga2">🇩🇪 Бундеслига 2</option>
+                            <option value="bundesliga3">🇩🇪 Бундеслига 3</option>
+                        </optgroup>
+                        <optgroup label="🇮🇹 Италия">
+                            <option value="seriea">🇮🇹 Серия А</option>
+                            <option value="serieb">🇮🇹 Серия В</option>
+                            <option value="seriec">🇮🇹 Серия С</option>
+                        </optgroup>
+                        <optgroup label="🇫🇷 Франция">
+                            <option value="ligue1">🇫🇷 Лига 1</option>
+                            <option value="ligue2">🇫🇷 Лига 2</option>
+                        </optgroup>
+                        <optgroup label="🇷🇺 Россия">
+                            <option value="rpl">🇷🇺 РПЛ</option>
+                            <option value="rpl1">🇷🇺 Первая лига</option>
+                            <option value="rpl2">🇷🇺 Вторая лига</option>
+                        </optgroup>
+                        <optgroup label="🇳🇱 Голландия">
+                            <option value="eredivisie">🇳🇱 Эредивизи</option>
+                        </optgroup>
+                        <optgroup label="🇵🇹 Португалия">
+                            <option value="primeira">🇵🇹 Примейра</option>
+                        </optgroup>
+                        <optgroup label="🇧🇷 Бразилия">
+                            <option value="brasil">🇧🇷 Серия А</option>
+                        </optgroup>
+                        <optgroup label="🇦🇷 Аргентина">
+                            <option value="argentina">🇦🇷 Примера</option>
+                        </optgroup>
+                        <optgroup label="🇺🇸 США">
+                            <option value="mls">🇺🇸 MLS</option>
+                        </optgroup>
+                        <optgroup label="🇲🇽 Мексика">
+                            <option value="ligamx">🇲🇽 Лига MX</option>
+                        </optgroup>
+                        <optgroup label="🇯🇵 Япония">
+                            <option value="j1">🇯🇵 J1 Лига</option>
+                            <option value="j2">🇯🇵 J2 Лига</option>
+                            <option value="j3">🇯🇵 J3 Лига</option>
+                        </optgroup>
+                        <optgroup label="🇰🇷 Корея">
+                            <option value="kleague1">🇰🇷 K Лига 1</option>
+                            <option value="kleague2">🇰🇷 K Лига 2</option>
+                        </optgroup>
+                        <optgroup label="🇨🇳 Китай">
+                            <option value="csl">🇨🇳 Суперлига</option>
+                            <option value="china1">🇨🇳 Лига 1</option>
+                        </optgroup>
+                        <optgroup label="🇦🇺 Австралия">
+                            <option value="aleague">🇦🇺 A-Лига</option>
+                            <option value="aleaguew">🇦🇺 A-Лига (Ж)</option>
+                        </optgroup>
+                        <optgroup label="🇸🇦 Саудовская Аравия">
+                            <option value="saudi">🇸🇦 Про-Лига</option>
+                            <option value="saudi1">🇸🇦 Первая лига</option>
+                        </optgroup>
+                        <optgroup label="🇶🇦 Катар">
+                            <option value="qatar">🇶🇦 Звездная лига</option>
+                        </optgroup>
+                        <optgroup label="🇦🇪 ОАЭ">
+                            <option value="uae">🇦🇪 Про-Лига</option>
+                        </optgroup>
+                        <optgroup label="🇮🇷 Иран">
+                            <option value="iran">🇮🇷 Персидская лига</option>
+                        </optgroup>
+                        <optgroup label="🇹🇷 Турция">
+                            <option value="superlig">🇹🇷 Суперлига</option>
+                            <option value="turkey1">🇹🇷 Первая лига</option>
+                        </optgroup>
+                        <optgroup label="🏆 Еврокубки">
+                            <option value="ucl">🏆 Лига Чемпионов</option>
+                            <option value="uel">🏆 Лига Европы</option>
+                            <option value="ecl">🏆 Лига Конференций</option>
+                        </optgroup>
+                        <optgroup label="🌍 Международные">
+                            <option value="worldcup">🌍 ЧМ</option>
+                            <option value="euro">🌍 ЧЕ</option>
+                            <option value="copa">🌍 Кубок Америки</option>
+                        </optgroup>
+                        <optgroup label="⚙️ Пользовательские" id="customOptgroup"></optgroup>
+                    </select>
+
+                    <div class="league-add">
+                        <div class="la-row">
+                            <input type="text" id="newLeagueName" placeholder="Название лиги (например: 🇧🇾 Высшая лига)" />
+                        </div>
+                        <div class="la-row">
+                            <input type="number" id="newLeagueGoals" class="la-small" placeholder="Тотал" step="0.1" min="0" max="10" />
+                            <input type="number" id="newLeagueCards" class="la-small" placeholder="ЖК" step="0.1" min="0" max="20" />
+                            <input type="number" id="newLeagueCorners" class="la-small" placeholder="Угловые" step="0.1" min="0" max="30" />
+                        </div>
+                        <button class="la-btn" onclick="App.addCustomLeague()">➕ Добавить лигу</button>
+                    </div>
+
+                    <div class="custom-leagues" id="customLeaguesList"></div>
+                </div>
+
+                <!-- РЕЖИМЫ -->
+                <div class="mode-tabs" id="modeTabs">
+                    <button class="active" data-mode="total" onclick="App.switchMode('total', this)">⚽ Тотал</button>
+                    <button data-mode="fora" onclick="App.switchMode('fora', this)">⚖️ Фора</button>
+                    <button data-mode="time" onclick="App.switchMode('time', this)">⏱️ Тайм</button>
+                    <button data-mode="ind" onclick="App.switchMode('ind', this)">🎯 Индив.</button>
+                    <button data-mode="corner" onclick="App.switchMode('corner', this)">🔄 Угловые</button>
+                    <button data-mode="cards" onclick="App.switchMode('cards', this)">🟨 ЖК</button>
+                    <button data-mode="oz" onclick="App.switchMode('oz', this)">⚽ ОЗ</button>
+                    <button data-mode="clean" onclick="App.switchMode('clean', this)">🧹 Сухая</button>
+                </div>
+
+                <!-- ПОЛЯ ВВОДА -->
+                <div id="inputArea"></div>
+
+                <!-- КНОПКИ -->
+                <button class="calc-btn" onclick="App.calculate()">⚡ Рассчитать</button>
+
+                <div class="action-row">
+                    <button class="save-btn" onclick="App.saveBet()">💾 Записать</button>
+                    <button class="clear-btn" onclick="App.clearAll()">🗑️ Очистить</button>
+                </div>
+
+                <!-- РЕЗУЛЬТАТ -->
+                <div class="result-card" id="resultCard">
+                    <div class="result-grid">
+                        <div class="item"><div class="label" id="resLabel1">Ожидаемый</div><div class="value" id="resValue1">--</div></div>
+                        <div class="item"><div class="label">Линия БК</div><div class="value" id="resValue2">--</div></div>
+                        <div class="item"><div class="label">Разница</div><div class="value" id="resValue3">--</div></div>
+                    </div>
+                    <div class="advice info" id="resAdvice">⏳ Введите данные для расчёта</div>
+                    <div style="margin-top:4px;">
+                        <div style="font-size:10px;color:#888;display:flex;justify-content:space-between;">
+                            <span>📊 Индекс доверия</span>
+                            <span id="confidenceLabel">0%</span>
+                        </div>
+                        <div class="confidence-bar"><div class="fill" id="confidenceFill" style="width:0%"></div></div>
+                    </div>
+                </div>
+
+                <!-- ЛИНИЯ БК -->
+                <div class="bk-row">
+                    <label>📈 Линия БК:</label>
+                    <input type="number" id="bkLine" placeholder="0" step="0.5" />
+                    <span class="bk-comment" id="bkComment">—</span>
+                </div>
+
+                <!-- СТАТИСТИКА КОМАНД -->
+                <div class="team-stats" id="teamStats" style="display:none;">
+                    <div class="ts-title">📊 Статистика команды</div>
+                    <div id="teamStatsContent">
+                        <div class="ts-row"><span class="ts-label">Средний тотал</span><span class="ts-value" id="tsGoals">--</span></div>
+                        <div class="ts-row"><span class="ts-label">Средние угловые</span><span class="ts-value" id="tsCorners">--</span></div>
+                        <div class="ts-row"><span class="ts-label">Средние ЖК</span><span class="ts-value" id="tsCards">--</span></div>
+                        <div class="ts-row"><span class="ts-label">ОЗ (да/нет)</span><span class="ts-value" id="tsOZ">--</span></div>
+                        <div class="ts-row"><span class="ts-label">Сухие матчи</span><span class="ts-value" id="tsClean">--</span></div>
+                    </div>
+                </div>
+
+                <!-- ИСТОРИЯ -->
+                <div style="margin-top:6px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin:2px 0 4px 0;">
+                        <span style="font-size:14px;font-weight:700;color:#f7931a;">📜 История</span>
+                        <button onclick="App.clearHistory()" style="background:#5a1a1a;color:#ff8a8a;border:none;padding:3px 10px;border-radius:14px;font-size:10px;cursor:pointer;">🗑️</button>
+                    </div>
+                    <div class="history-filters" id="historyFilters">
+                        <button class="active" data-filter="all" onclick="App.setFilter('all', this)">Все</button>
+                        <button data-filter="win" onclick="App.setFilter('win', this)">✅</button>
+                        <button data-filter="loss" onclick="App.setFilter('loss', this)">❌</button>
+                        <button data-filter="pending" onclick="App.setFilter('pending', this)">⏳</button>
+                        <button data-filter="total" onclick="App.setFilter('total', this)">Тотал</button>
+                        <button data-filter="fora" onclick="App.setFilter('fora', this)">Фора</button>
+                    </div>
+                    <div class="history-list" id="historyList"><div class="text-muted text-center" style="padding:12px 0;">Нет ставок</div></div>
+                </div>
+
+                <!-- СТАТИСТИКА -->
+                <div style="margin-top:6px;">
+                    <div style="font-size:14px;font-weight:700;color:#f7931a;margin-bottom:4px;">📊 Статистика</div>
+                    <div class="stats-grid" id="statsGrid">
+                        <div class="stats-card"><div class="num" id="statTotal">0</div><div class="label">Всего</div></div>
+                        <div class="stats-card"><div class="num" id="statWinRate">0%</div><div class="label">% побед</div></div>
+                        <div class="stats-card"><div class="num" id="statBalance">0</div><div class="label">Баланс</div></div>
+                        <div class="stats-card"><div class="num" id="statROI">0%</div><div class="label">ROI</div></div>
+                    </div>
+                </div>
+
+                <!-- ГРАФИК -->
+                <div class="chart-container">
+                    <div class="chart-title">📈 График баланса (последние 20)</div>
+                    <div class="chart-bars" id="chartBars"></div>
+                </div>
+
+                <!-- ВЫВОДЫ -->
+                <div class="insights-box" id="insightsBox">
+                    <div class="insights-title">🧠 Умные выводы</div>
+                    <div id="insightsContent">
+                        <div class="insight-item"><span class="icon">⏳</span><span class="text">Нет данных для анализа. Сделайте больше ставок.</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- НАСТРОЙКИ -->
+            <div class="screen" id="screenSettings">
+                <div class="settings-header">
+                    <button class="back-btn" onclick="App.goToScreen(0)">‹</button>
+                    <h2>⚙️ Настройки</h2>
+                </div>
+                <div class="settings-card">
+                    <div class="setting-row">
+                        <div class="setting-label">💰 Размер банка</div>
+                        <div class="setting-desc">Общая сумма денег для ставок.</div>
+                        <input type="number" id="bankroll" step="100" min="0" placeholder="Например: 10000" />
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-label">🏆 Базовая лига</div>
+                        <div class="setting-desc">Лига по умолчанию при запуске.</div>
+                        <select id="defaultLeague"></select>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-label">📊 Базовый темп</div>
+                        <div class="setting-desc">Средняя результативность (голов за матч).</div>
+                        <input type="number" id="baseTempo" step="0.1" min="1.0" max="4.0" />
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-label">🎯 Порог сигнала</div>
+                        <div class="range-row">
+                            <input type="range" id="signalThreshold" min="0.5" max="3.0" step="0.1" />
+                            <span id="signalThresholdValue">1.5</span>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-label">🧠 Самообучение</div>
+                        <div class="toggle-row">
+                            <label>Адаптировать под вашу историю</label>
+                            <select id="enableLearning">
+                                <option value="true">✅ Включено</option>
+                                <option value="false">❌ Выключено</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-actions">
+                    <button class="save-btn-setting" onclick="App.saveSettings()">💾 Сохранить</button>
+                    <button class="reset-btn-setting" onclick="App.resetSettings()">🔄 Сбросить</button>
+                </div>
+                <div style="margin-top:6px; font-size:11px; color:#555; text-align:center;" id="settingsStatus"></div>
+            </div>
+        </div>
+
+        <div class="swipe-indicator">
+            <div class="dot active" data-index="0"></div>
+            <div class="dot" data-index="1"></div>
+        </div>
+
+        <!-- МОДАЛКА -->
+        <div class="modal-overlay" id="editModal">
+            <div class="modal-box">
+                <h3>✏️ Редактировать</h3>
+                <label>Исход</label>
+                <select id="editOutcome">
+                    <option value="win">✅ Выиграла</option>
+                    <option value="loss">❌ Проиграла</option>
+                    <option value="pending">⏳ Неизвестно</option>
+                </select>
+                <label>Тег</label>
+                <input type="text" id="editTag" placeholder="Тег" />
+                <label>Коэффициент</label>
+                <input type="number" id="editOdds" step="0.01" placeholder="1.85" />
+                <div class="modal-actions">
+                    <button class="save" onclick="App.saveEdit()">💾 Сохранить</button>
+                    <button class="cancel" onclick="App.closeEdit()">❌ Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        // Футбол-Апп PRO 3.0 — ФИНАЛЬНЫЙ КОД
+        // ================================================================
+
+        const App = (function() {
+            'use strict';
+
+            // ===== ВСЕ ЛИГИ =====
+            const ALL_LEAGUES = {
+                'premier': { name: '🏴 АПЛ', goals: 2.8, cards: 3.5, corners: 10.5, oz: 65, clean: 25 },
+                'championship': { name: '🏴 Чемпионшип', goals: 2.6, cards: 4.0, corners: 10.0, oz: 62, clean: 28 },
+                'league1': { name: '🏴 Лига 1', goals: 2.4, cards: 4.2, corners: 9.5, oz: 58, clean: 30 },
+                'league2': { name: '🏴 Лига 2', goals: 2.3, cards: 4.5, corners: 9.0, oz: 55, clean: 32 },
+                'laliga': { name: '🇪🇸 Ла Лига', goals: 2.6, cards: 5.0, corners: 9.8, oz: 60, clean: 28 },
+                'segunda': { name: '🇪🇸 Сегунда', goals: 2.4, cards: 5.5, corners: 9.0, oz: 56, clean: 30 },
+                'bundesliga': { name: '🇩🇪 Бундеслига', goals: 3.0, cards: 4.0, corners: 10.2, oz: 68, clean: 22 },
+                'bundesliga2': { name: '🇩🇪 Бундеслига 2', goals: 2.7, cards: 4.5, corners: 9.5, oz: 62, clean: 26 },
+                'bundesliga3': { name: '🇩🇪 Бундеслига 3', goals: 2.5, cards: 5.0, corners: 9.0, oz: 58, clean: 30 },
+                'seriea': { name: '🇮🇹 Серия А', goals: 2.7, cards: 4.8, corners: 9.5, oz: 62, clean: 26 },
+                'serieb': { name: '🇮🇹 Серия В', goals: 2.4, cards: 5.2, corners: 9.0, oz: 56, clean: 30 },
+                'seriec': { name: '🇮🇹 Серия С', goals: 2.2, cards: 5.5, corners: 8.5, oz: 52, clean: 34 },
+                'ligue1': { name: '🇫🇷 Лига 1', goals: 2.5, cards: 4.2, corners: 9.0, oz: 58, clean: 30 },
+                'ligue2': { name: '🇫🇷 Лига 2', goals: 2.3, cards: 4.5, corners: 8.5, oz: 54, clean: 32 },
+                'rpl': { name: '🇷🇺 РПЛ', goals: 2.2, cards: 4.5, corners: 8.5, oz: 55, clean: 32 },
+                'rpl1': { name: '🇷🇺 Первая лига', goals: 2.0, cards: 5.0, corners: 8.0, oz: 50, clean: 35 },
+                'rpl2': { name: '🇷🇺 Вторая лига', goals: 1.8, cards: 5.5, corners: 7.5, oz: 48, clean: 38 },
+                'eredivisie': { name: '🇳🇱 Эредивизи', goals: 3.2, cards: 3.5, corners: 10.5, oz: 72, clean: 20 },
+                'primeira': { name: '🇵🇹 Примейра', goals: 2.6, cards: 4.8, corners: 9.5, oz: 60, clean: 28 },
+                'brasil': { name: '🇧🇷 Серия А', goals: 2.5, cards: 5.5, corners: 9.0, oz: 62, clean: 26 },
+                'argentina': { name: '🇦🇷 Примера', goals: 2.3, cards: 5.8, corners: 8.5, oz: 58, clean: 30 },
+                'mls': { name: '🇺🇸 MLS', goals: 2.8, cards: 4.0, corners: 9.5, oz: 68, clean: 24 },
+                'ligamx': { name: '🇲🇽 Лига MX', goals: 2.6, cards: 5.0, corners: 9.0, oz: 64, clean: 26 },
+                'j1': { name: '🇯🇵 J1 Лига', goals: 2.4, cards: 3.8, corners: 8.5, oz: 60, clean: 28 },
+                'j2': { name: '🇯🇵 J2 Лига', goals: 2.2, cards: 4.2, corners: 8.0, oz: 56, clean: 30 },
+                'j3': { name: '🇯🇵 J3 Лига', goals: 2.0, cards: 4.5, corners: 7.5, oz: 52, clean: 34 },
+                'kleague1': { name: '🇰🇷 K Лига 1', goals: 2.5, cards: 4.2, corners: 8.5, oz: 62, clean: 26 },
+                'kleague2': { name: '🇰🇷 K Лига 2', goals: 2.3, cards: 4.5, corners: 8.0, oz: 58, clean: 30 },
+                'csl': { name: '🇨🇳 Суперлига', goals: 2.6, cards: 4.5, corners: 8.5, oz: 64, clean: 26 },
+                'china1': { name: '🇨🇳 Лига 1', goals: 2.3, cards: 5.0, corners: 8.0, oz: 58, clean: 30 },
+                'aleague': { name: '🇦🇺 A-Лига', goals: 2.8, cards: 4.0, corners: 9.0, oz: 66, clean: 24 },
+                'aleaguew': { name: '🇦🇺 A-Лига (Ж)', goals: 2.4, cards: 3.5, corners: 8.0, oz: 60, clean: 28 },
+                'saudi': { name: '🇸🇦 Про-Лига', goals: 2.7, cards: 4.5, corners: 8.5, oz: 64, clean: 26 },
+                'saudi1': { name: '🇸🇦 Первая лига', goals: 2.4, cards: 5.0, corners: 8.0, oz: 58, clean: 30 },
+                'qatar': { name: '🇶🇦 Звездная лига', goals: 2.5, cards: 4.2, corners: 8.0, oz: 60, clean: 28 },
+                'uae': { name: '🇦🇪 Про-Лига', goals: 2.6, cards: 4.5, corners: 8.5, oz: 62, clean: 26 },
+                'iran': { name: '🇮🇷 Персидская лига', goals: 2.0, cards: 5.5, corners: 7.5, oz: 50, clean: 36 },
+                'superlig': { name: '🇹🇷 Суперлига', goals: 2.7, cards: 5.2, corners: 9.0, oz: 64, clean: 26 },
+                'turkey1': { name: '🇹🇷 Первая лига', goals: 2.4, cards: 5.5, corners: 8.5, oz: 58, clean: 30 },
+                'ucl': { name: '🏆 Лига Чемпионов', goals: 2.8, cards: 4.0, corners: 9.5, oz: 66, clean: 24 },
+                'uel': { name: '🏆 Лига Европы', goals: 2.6, cards: 4.5, corners: 9.0, oz: 62, clean: 28 },
+                'ecl': { name: '🏆 Лига Конференций', goals: 2.5, cards: 4.5, corners: 8.5, oz: 60, clean: 30 },
+                'worldcup': { name: '🌍 ЧМ', goals: 2.4, cards: 4.0, corners: 8.5, oz: 58, clean: 30 },
+                'euro': { name: '🌍 ЧЕ', goals: 2.5, cards: 4.0, corners: 8.5, oz: 60, clean: 28 },
+                'copa': { name: '🌍 Кубок Америки', goals: 2.3, cards: 5.0, corners: 8.0, oz: 56, clean: 32 },
+                'custom': { name: '⚙️ Свои', goals: 2.5, cards: 4.0, corners: 9.0, oz: 60, clean: 28 }
+            };
+
+            // ===== СОСТОЯНИЕ =====
+            const state = {
+                bets: [],
+                settings: {},
+                baseTempo: 2.5,
+                bankroll: 0,
+                currentFilter: 'all',
+                editIndex: -1,
+                currentMode: 'total',
+                currentLeague: 'premier',
+                customLeagues: {},
+                learningData: {
+                    totalBets: 0,
+                    wins: 0,
+                    losses: 0,
+                    modeStats: {}
+                }
+            };
+
+            // ===== РЕЖИМЫ =====
+            const MODES = {
+                total: { name: 'Тотал', label: '⚽ Тотал', fields: [{id:'h1',label:'Хозяева 1-й',placeholder:'0'},{id:'a1',label:'Гости 1-й',placeholder:'0'},{id:'h2',label:'Хозяева 2-й',placeholder:'0'},{id:'a2',label:'Гости 2-й',placeholder:'0'}], resultLabel: 'Ожидаемый тотал' },
+                fora: { name: 'Фора', label: '⚖️ Фора', fields: [{id:'h1',label:'Хозяева 1-й',placeholder:'0'},{id:'a1',label:'Гости 1-й',placeholder:'0'},{id:'h2',label:'Хозяева 2-й',placeholder:'0'},{id:'a2',label:'Гости 2-й',placeholder:'0'}], resultLabel: 'Ожидаемая фора' },
+                time: { name: 'Тайм', label: '⏱️ Тайм', fields: [{id:'h1',label:'1-й тайм Х',placeholder:'0'},{id:'a1',label:'1-й тайм Г',placeholder:'0'},{id:'h2',label:'2-й тайм Х',placeholder:'0'},{id:'a2',label:'2-й тайм Г',placeholder:'0'}], resultLabel: 'Ожидаемый тотал' },
+                ind: { name: 'Индив.', label: '🎯 Индив.', fields: [{id:'h1',label:'Хозяева 1-й',placeholder:'0'},{id:'a1',label:'Гости 1-й',placeholder:'0'},{id:'h2',label:'Хозяева 2-й',placeholder:'0'},{id:'a2',label:'Гости 2-й',placeholder:'0'}], resultLabel: 'ИТ хозяев' },
+                corner: { name: 'Угловые', label: '🔄 Угловые', fields: [{id:'h1',label:'Хозяева 1-й',placeholder:'0'},{id:'a1',label:'Гости 1-й',placeholder:'0'},{id:'h2',label:'Хозяева 2-й',placeholder:'0'},{id:'a2',label:'Гости 2-й',placeholder:'0'}], resultLabel: 'Ожидаемые угловые' },
+                cards: { name: 'ЖК', label: '🟨 ЖК', fields: [{id:'h1',label:'Хозяева 1-й',placeholder:'0'},{id:'a1',label:'Гости 1-й',placeholder:'0'},{id:'h2',label:'Хозяева 2-й',placeholder:'0'},{id:'a2',label:'Гости 2-й',placeholder:'0'}], resultLabel: 'Ожидаемые ЖК' },
+                oz: { name: 'ОЗ', label: '⚽ ОЗ', fields: [{id:'h',label:'Голы хозяев',placeholder:'0'},{id:'a',label:'Голы гостей',placeholder:'0'}], resultLabel: 'Обе забьют' },
+                clean: { name: 'Сухая', label: '🧹 Сухая', fields: [{id:'h',label:'Голы хозяев',placeholder:'0'},{id:'a',label:'Голы гостей',placeholder:'0'}], resultLabel: 'Сухой матч' }
+            };
+
+            // ===== ВСПОМОГАТЕЛЬНЫЕ =====
+            function $(id) { return document.getElementById(id); }
+            function qs(s) { return document.querySelector(s); }
+            function qsa(s) { return document.querySelectorAll(s); }
+            function safeNumber(v, fallback = 0) { const num = parseFloat(v); return isNaN(num) ? fallback : num; }
+            function safeLoad(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; } }
+            function safeSave(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); return true; } catch(e) { return false; } }
+
+            function showToast(msg, type = 'info') {
+                const existing = qs('.toast-notification');
+                if (existing) existing.remove();
+                const toast = document.createElement('div');
+                toast.className = 'toast-notification ' + type;
+                toast.textContent = msg;
+                document.body.appendChild(toast);
+                setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3000);
+            }
+
+            // ===== ЛИГИ =====
+            function getLeagues() {
+                const leagues = { ...ALL_LEAGUES };
+                const custom = safeLoad('customLeagues', {});
+                Object.keys(custom).forEach(key => { leagues[key] = custom[key]; });
+                return leagues;
+            }
+
+            function getLeagueStats(leagueKey) {
+                const leagues = getLeagues();
+                return leagues[leagueKey] || leagues['premier'];
+            }
+
+            function renderLeagueSelect() {
+                const select = $('leagueSelect');
+                const leagues = getLeagues();
+                const current = state.currentLeague;
+
+                // Сохраняем выбранное значение
+                const customOptgroup = select.querySelector('#customOptgroup');
+                if (customOptgroup) {
+                    customOptgroup.innerHTML = '';
+                    const customKeys = Object.keys(leagues).filter(k => !ALL_LEAGUES[k]);
+                    customKeys.forEach(key => {
+                        const option = document.createElement('option');
+                        option.value = key;
+                        option.textContent = leagues[key].name;
+                        if (key === current) option.selected = true;
+                        customOptgroup.appendChild(option);
+                    });
+                }
+
+                // Устанавливаем значение
+                select.value = current;
+
+                // Обновляем список пользовательских лиг
+                renderCustomLeagues();
+            }
+
+            function renderCustomLeagues() {
+                const container = $('customLeaguesList');
+                const leagues = getLeagues();
+                const customKeys = Object.keys(leagues).filter(k => !ALL_LEAGUES[k]);
+
+                if (customKeys.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                container.innerHTML = customKeys.map(key => {
+                    const league = leagues[key];
+                    return `<span class="custom-league-item">
+                        ${league.name} (${league.goals}г, ${league.cards}жк, ${league.corners}уг)
+                        <button class="cl-remove" onclick="App.removeCustomLeague('${key}')">✕</button>
+                    </span>`;
+                }).join('');
+            }
+
+            function addCustomLeague() {
+                const name = $('newLeagueName').value.trim();
+                const goals = safeNumber($('newLeagueGoals').value);
+                const cards = safeNumber($('newLeagueCards').value);
+                const corners = safeNumber($('newLeagueCorners').value);
+
+                if (!name) {
+                    showToast('⚠️ Введите название лиги', 'error');
+                    return;
+                }
+
+                const key = 'custom_' + Date.now();
+                const custom = safeLoad('customLeagues', {});
+                custom[key] = {
+                    name: name,
+                    goals: goals || 2.5,
+                    cards: cards || 4.0,
+                    corners: corners || 9.0,
+                    oz: 60,
+                    clean: 28
+                };
+                safeSave('customLeagues', custom);
+
+                $('newLeagueName').value = '';
+                $('newLeagueGoals').value = '';
+                $('newLeagueCards').value = '';
+                $('newLeagueCorners').value = '';
+
+                renderLeagueSelect();
+                state.currentLeague = key;
+                $('leagueSelect').value = key;
+                onLeagueChange();
+                showToast('✅ Лига добавлена: ' + name, 'success');
+            }
+
+            function removeCustomLeague(key) {
+                if (!confirm('Удалить лигу?')) return;
+                const custom = safeLoad('customLeagues', {});
+                delete custom[key];
+                safeSave('customLeagues', custom);
+                renderLeagueSelect();
+                if (state.currentLeague === key) {
+                    state.currentLeague = 'premier';
+                    $('leagueSelect').value = 'premier';
+                    onLeagueChange();
+                }
+                showToast('🗑️ Лига удалена', 'info');
+            }
+
+            function onLeagueChange() {
+                const select = $('leagueSelect');
+                state.currentLeague = select.value;
+                if (document.querySelectorAll('#inputArea input').some(el => el.value > 0)) {
+                    calculate();
+                }
+                updateInsights();
+            }
+
+            // ===== РЕЖИМЫ =====
+            function switchMode(mode, btn) {
+                state.currentMode = mode;
+                qsa('#modeTabs button').forEach(b => b.classList.remove('active'));
+                if (btn) btn.classList.add('active');
+                renderInputs();
+                updateAll();
+                $('sbMode').textContent = MODES[mode].name;
+                $('teamStats').style.display = 'none';
+            }
+
+            function renderInputs() {
+                const area = $('inputArea');
+                const mode = MODES[state.currentMode];
+                let html = `<div style="font-size:13px;font-weight:700;color:#f7931a;margin-bottom:4px;">📊 ${mode.name}</div>`;
+
+                if (state.currentMode === 'oz' || state.currentMode === 'clean') {
+                    html += `<div class="input-row-custom">
+                        <div class="field"><label>🏠 Хозяева</label><input type="number" id="h" placeholder="0" min="0" max="99" /></div>
+                        <div class="field"><label>✈️ Гости</label><input type="number" id="a" placeholder="0" min="0" max="99" /></div>
+                    </div>`;
+                } else {
+                    html += `<div class="input-grid">`;
+                    mode.fields.forEach(f => {
+                        html += `<div><div class="label">${f.label}</div><input type="number" id="${f.id}" placeholder="${f.placeholder}" min="0" max="99" /></div>`;
+                    });
+                    html += `</div>`;
+                }
+
+                html += `<div class="total-display-custom">
+                    <div class="label">📈 Сумма</div>
+                    <div class="value" id="sumDisplay">0</div>
+                </div>`;
+
+                html += `<div class="input-row-custom">
+                    <div class="field"><label>🏠 Хозяева</label><input type="text" id="homeName" placeholder="Реал Мадрид" /></div>
+                    <div class="field"><label>✈️ Гости</label><input type="text" id="awayName" placeholder="Барселона" /></div>
+                </div>`;
+
+                area.innerHTML = html;
+
+                const inputs = area.querySelectorAll('input');
+                inputs.forEach(el => {
+                    el.addEventListener('input', function() {
+                        updateSum();
+                        debouncedUpdate();
+                        if (this.id === 'homeName') $('homeTeam').textContent = this.value || 'Хозяева';
+                        if (this.id === 'awayName') $('awayTeam').textContent = this.value || 'Гости';
+                    });
+                });
+
+                updateSum();
+            }
+
+            function updateSum() {
+                const mode = MODES[state.currentMode];
+                let total = 0;
+                if (state.currentMode === 'oz' || state.currentMode === 'clean') {
+                    total = safeNumber($('h')?.value) + safeNumber($('a')?.value);
+                } else {
+                    mode.fields.forEach(f => { total += safeNumber($(f.id)?.value); });
+                }
+                $('sumDisplay').textContent = total;
+            }
+
+            // ===== РАСЧЕТ =====
+            function getValues() {
+                const mode = MODES[state.currentMode];
+                const v = {};
+                if (state.currentMode === 'oz' || state.currentMode === 'clean') {
+                    v.h = safeNumber($('h')?.value);
+                    v.a = safeNumber($('a')?.value);
+                } else {
+                    mode.fields.forEach(f => { v[f.id] = safeNumber($(f.id)?.value); });
+                }
+                return v;
+            }
+
+            function calculate() {
+                const mode = MODES[state.currentMode];
+                const v = getValues();
+                const leagueKey = state.currentLeague;
+                const league = getLeagueStats(leagueKey);
+                const bkLine = safeNumber($('bkLine')?.value);
+                const hasBk = bkLine !== 0;
+
+                let result = { value: 0, prob: 50, total: 0, home: 0, away: 0 };
+
+                const homeName = $('homeName')?.value || 'Хозяева';
+                const awayName = $('awayName')?.value || 'Гости';
+                $('homeTeam').textContent = homeName;
+                $('awayTeam').textContent = awayName;
+
+                if (state.currentMode === 'oz' || state.currentMode === 'clean') {
+                    const home = v.h || 0;
+                    const away = v.a || 0;
+                    const total = home + away;
+                    $('homeScore').textContent = home;
+                    $('awayScore').textContent = away;
+                    $('sbTotal').textContent = total;
+
+                    if (state.currentMode === 'oz') {
+                        const both = home > 0 && away > 0;
+                        let prob = both ? 75 : 25;
+                        prob = (prob + (league.oz || 60)) / 2;
+                        if (total > 2) prob += 10;
+                        if (total < 1) prob -= 20;
+                        if (total === 0) prob = 5;
+                        result = { value: both ? '✅ Да' : '❌ Нет', prob: Math.min(100, Math.max(0, Math.round(prob))), total, home, away };
+                    } else {
+                        const homeClean = away === 0;
+                        const awayClean = home === 0;
+                        let prob = homeClean ? 60 : (awayClean ? 55 : 20);
+                        prob = (prob + (league.clean || 28)) / 2;
+                        if (total > 2) prob -= 20;
+                        if (total === 0) prob = 80;
+                        result = { value: homeClean ? '✅ Хозяева' : (awayClean ? '✅ Гости' : '❌ Нет'), prob: Math.min(100, Math.max(0, Math.round(prob))), total, home, away };
+                    }
+
+                    $('resLabel1').textContent = mode.resultLabel;
+                    $('resValue1').textContent = result.value;
+                    $('resValue2').textContent = hasBk ? (bkLine > 0 ? '✅ Да' : '❌ Нет') : '--';
+                    $('resValue3').textContent = '--';
+
+                    const advice = $('resAdvice');
+                    if (result.prob > 70) { advice.textContent = `✅ Вероятность ${result.prob}% — высокая`;
+                        advice.className = 'advice'; }
+                    else if (result.prob > 40) { advice.textContent = `🟡 Вероятность ${result.prob}% — средняя`;
+                        advice.className = 'advice warning'; }
+                    else { advice.textContent = `🔴 Вероятность ${result.prob}% — низкая`;
+                        advice.className = 'advice danger'; }
+
+                    let confidence = result.prob;
+                    $('confidenceLabel').textContent = confidence + '%';
+                    $('confidenceFill').style.width = confidence + '%';
+                    const fill = $('confidenceFill');
+                    if (confidence > 70) fill.style.background = 'linear-gradient(90deg, #2ecc71, #27ae60)';
+                    else if (confidence > 40) fill.style.background = 'linear-gradient(90deg, #f1c40f, #f39c12)';
+                    else fill.style.background = 'linear-gradient(90deg, #e74c3c, #c0392b)';
+
+                } else {
+                    const home = (v.h1 || 0) + (v.h2 || 0);
+                    const away = (v.a1 || 0) + (v.a2 || 0);
+                    const total = home + away;
+                    $('homeScore').textContent = home;
+                    $('awayScore').textContent = away;
+                    $('sbTotal').textContent = total;
+
+                    const periods = $('sbPeriods');
+                    periods.innerHTML = [
+                        { label: '1-й тайм', h: v.h1 || 0, a: v.a1 || 0 },
+                        { label: '2-й тайм', h: v.h2 || 0, a: v.a2 || 0 }
+                    ].map(p =>
+                        `<div class="period"><div class="p-label">${p.label}</div><div class="p-score"><span class="home">${p.h}</span><span class="away">${p.a}</span></div></div>`
+                    ).join('');
+
+                    let expected = 0;
+                    const tempo = total / 2;
+
+                    switch (state.currentMode) {
+                        case 'total':
+                            expected = total;
+                            if (total === 0) expected = Math.round(league.goals || 2.5);
+                            if (tempo > (league.goals || 2.5) + 0.5) expected += Math.round(total * 0.05);
+                            else if (tempo < (league.goals || 2.5) - 0.5) expected -= Math.round(total * 0.05);
+                            if (Math.abs(home - away) > 2) expected -= Math.round(total * 0.03);
+                            break;
+                        case 'fora':
+                            expected = Math.round((home - away) / 2);
+                            if (total === 0) expected = 0;
+                            if (tempo > (league.goals || 2.5) + 0.5) expected += 0.5;
+                            else if (tempo < (league.goals || 2.5) - 0.5) expected -= 0.5;
+                            if (Math.abs(home - away) < 2) expected = 0;
+                            break;
+                        case 'time':
+                            const first = (v.h1 || 0) + (v.a1 || 0);
+                            const second = (v.h2 || 0) + (v.a2 || 0);
+                            expected = first + Math.round(second * 0.8);
+                            if (total === 0) expected = Math.round((league.goals || 2.5) / 2);
+                            if (tempo > (league.goals || 2.5) + 0.5) expected += Math.round(total * 0.05);
+                            break;
+                        case 'ind':
+                            expected = home + Math.round((total / 2) * 0.05);
+                            if (total === 0) expected = Math.round((league.goals || 2.5) / 2);
+                            if (tempo > (league.goals || 2.5) + 0.5) expected += 0.5;
+                            break;
+                        case 'corner':
+                            expected = Math.round(total * 1.05);
+                            if (total === 0) expected = Math.round(league.corners || 9.0);
+                            if (tempo > 5) expected += Math.round(total * 0.1);
+                            break;
+                        case 'cards':
+                            expected = Math.round(total * 1.1);
+                            if (total === 0) expected = Math.round(league.cards || 4.0);
+                            if (tempo > 3) expected += Math.round(total * 0.15);
+                            break;
+                    }
+
+                    const learning = getLearningAdjustment(state.currentMode);
+                    expected += learning;
+
+                    if (state.currentMode === 'fora') {
+                        expected = Math.round(expected * 2) / 2;
+                    } else {
+                        expected = Math.max(0, Math.round(expected));
+                    }
+
+                    result = { value: expected, total, home, away, tempo };
+
+                    $('resLabel1').textContent = mode.resultLabel;
+                    $('resValue1').textContent = expected;
+                    $('resValue2').textContent = hasBk ? bkLine : '--';
+
+                    if (hasBk) {
+                        const diff = expected - bkLine;
+                        $('resValue3').textContent = (diff >= 0 ? '+' : '') + diff.toFixed(1);
+                        const advice = $('resAdvice');
+                        if (Math.abs(diff) > 2) {
+                            const isOver = diff > 0;
+                            advice.textContent = `✅ ${isOver ? 'БК занизил' : 'БК завысил'} на ${Math.abs(diff).toFixed(1)}. Рекомендуем ${isOver ? 'ОВЕР' : 'АНДЕР'}`;
+                            advice.className = 'advice';
+                        } else {
+                            advice.textContent = `⏳ Линии близки (разница ${diff.toFixed(1)})`;
+                            advice.className = 'advice warning';
+                        }
+                    } else {
+                        $('resValue3').textContent = '--';
+                        $('resAdvice').textContent = `📊 Введите линию БК для сравнения`;
+                        $('resAdvice').className = 'advice info';
+                    }
+
+                    let confidence = 50;
+                    const diffFromAvg = Math.abs((result.total || 0) - (league.goals || 2.5));
+                    confidence = Math.max(30, Math.min(90, 70 - diffFromAvg * 5));
+
+                    if (state.currentMode === 'corner') {
+                        const diffCorner = Math.abs((result.value || 0) - (league.corners || 9.0));
+                        confidence += Math.max(-20, Math.min(20, 20 - diffCorner * 2));
+                    }
+                    if (state.currentMode === 'cards') {
+                        const diffCards = Math.abs((result.value || 0) - (league.cards || 4.0));
+                        confidence += Math.max(-20, Math.min(20, 20 - diffCards * 2));
+                    }
+
+                    if (hasBk && Math.abs(result.value - bkLine) > 2) confidence += 10;
+                    else if (hasBk) confidence -= 5;
+
+                    confidence = Math.max(0, Math.min(100, Math.round(confidence)));
+                    $('confidenceLabel').textContent = confidence + '%';
+                    $('confidenceFill').style.width = confidence + '%';
+                    const fill = $('confidenceFill');
+                    if (confidence > 70) fill.style.background = 'linear-gradient(90deg, #2ecc71, #27ae60)';
+                    else if (confidence > 40) fill.style.background = 'linear-gradient(90deg, #f1c40f, #f39c12)';
+                    else fill.style.background = 'linear-gradient(90deg, #e74c3c, #c0392b)';
+                }
+
+                $('sbStatus').textContent = '🟢 Активен';
+                $('sbForecast').textContent = `${mode.name}: ${result.value}`;
+                $('sbMode').textContent = mode.name;
+
+                if (homeName && homeName !== 'Хозяева' && homeName !== '') {
+                    const statsData = getTeamStats(homeName);
+                    if (statsData) {
+                        $('teamStats').style.display = 'block';
+                        $('teamStatsContent').innerHTML = `
+                            <div class="ts-row"><span class="ts-label">📊 Матчей</span><span class="ts-value">${statsData.total}</span></div>
+                            <div class="ts-row"><span class="ts-label">⚽ Средний тотал</span><span class="ts-value">${statsData.avgGoals}</span></div>
+                            <div class="ts-row"><span class="ts-label">🔄 Средние угловые</span><span class="ts-value">${statsData.avgCorners}</span></div>
+                            <div class="ts-row"><span class="ts-label">🟨 Средние ЖК</span><span class="ts-value">${statsData.avgCards}</span></div>
+                            <div class="ts-row"><span class="ts-label">⚽ ОЗ (да)</span><span class="ts-value ${statsData.ozRate > 60 ? 'green' : 'red'}">${statsData.ozRate}%</span></div>
+                            <div class="ts-row"><span class="ts-label">🧹 Сухие матчи</span><span class="ts-value ${statsData.cleanRate > 30 ? 'green' : 'red'}">${statsData.cleanRate}%</span></div>
+                        `;
+                    }
+                }
+
+                renderHistory();
+                renderStats();
+                renderChart();
+                updateInsights();
+            }
+
+            // ===== ОБУЧЕНИЕ =====
+            function getLearningAdjustment(mode) {
+                if (!state.settings.enableLearning) return 0;
+                const stats = state.learningData.modeStats[mode];
+                if (!stats || stats.total < 3) return 0;
+                const winRate = stats.wins / stats.total;
+                if (winRate > 0.6) return Math.round((winRate - 0.6) * 5);
+                if (winRate < 0.4) return Math.round((winRate - 0.4) * 5);
+                return 0;
+            }
+
+            // ===== СТАТИСТИКА КОМАНД =====
+            function getTeamStats(teamName) {
+                if (!teamName || teamName === 'Хозяева' || teamName === 'Гости') return null;
+                const teamBets = state.bets.filter(b => b.match && b.match.toLowerCase().includes(teamName.toLowerCase()));
+                if (teamBets.length === 0) return null;
+
+                const stats = { total: teamBets.length, goals: 0, corners: 0, cards: 0, oz: 0, clean: 0 };
+                teamBets.forEach(b => {
+                    if (b.value && typeof b.value === 'number') stats.goals += b.value;
+                    if (b.corners) stats.corners += b.corners;
+                    if (b.cards) stats.cards += b.cards;
+                    if (b.oz === true) stats.oz++;
+                    if (b.clean === true) stats.clean++;
+                });
+                return {
+                    total: stats.total,
+                    avgGoals: (stats.goals / stats.total).toFixed(1),
+                    avgCorners: (stats.corners / stats.total).toFixed(1),
+                    avgCards: (stats.cards / stats.total).toFixed(1),
+                    ozRate: Math.round((stats.oz / stats.total) * 100),
+                    cleanRate: Math.round((stats.clean / stats.total) * 100)
+                };
+            }
+
+            function showTeamStats(side) {
+                const homeName = $('homeTeam').textContent;
+                const awayName = $('awayTeam').textContent;
+                const teamName = side === 'home' ? homeName : awayName;
+                if (!teamName || teamName === 'Хозяева' || teamName === 'Гости') {
+                    showToast('Введите название команды', 'info');
+                    return;
+                }
+                const stats = getTeamStats(teamName);
+                const container = $('teamStats');
+                if (!stats) {
+                    container.style.display = 'block';
+                    $('teamStatsContent').innerHTML = `<div style="text-align:center;color:#888;font-size:12px;padding:8px 0;">Нет данных по команде "${teamName}"</div>`;
+                    return;
+                }
+                container.style.display = 'block';
+                $('teamStatsContent').innerHTML = `
+                    <div class="ts-row"><span class="ts-label">📊 Матчей</span><span class="ts-value">${stats.total}</span></div>
+                    <div class="ts-row"><span class="ts-label">⚽ Средний тотал</span><span class="ts-value">${stats.avgGoals}</span></div>
+                    <div class="ts-row"><span class="ts-label">🔄 Средние угловые</span><span class="ts-value">${stats.avgCorners}</span></div>
+                    <div class="ts-row"><span class="ts-label">🟨 Средние ЖК</span><span class="ts-value">${stats.avgCards}</span></div>
+                    <div class="ts-row"><span class="ts-label">⚽ ОЗ (да)</span><span class="ts-value ${stats.ozRate > 60 ? 'green' : 'red'}">${stats.ozRate}%</span></div>
+                    <div class="ts-row"><span class="ts-label">🧹 Сухие матчи</span><span class="ts-value ${stats.cleanRate > 30 ? 'green' : 'red'}">${stats.cleanRate}%</span></div>
+                `;
+            }
+
+            // ===== ОБНОВЛЕНИЕ =====
+            let updateTimeout = null;
+
+            function debouncedUpdate() {
+                if (updateTimeout) clearTimeout(updateTimeout);
+                updateTimeout = setTimeout(updateAll, 200);
+            }
+
+            function updateAll() {
+                updateSum();
+                const v = getValues();
+                const mode = MODES[state.currentMode];
+                let total = 0;
+                if (state.currentMode === 'oz' || state.currentMode === 'clean') {
+                    total = (v.h || 0) + (v.a || 0);
+                } else {
+                    mode.fields.forEach(f => { total += v[f.id] || 0; });
+                }
+                if (total > 0 || document.querySelectorAll('#inputArea input').some(el => el.value > 0)) {
+                    calculate();
+                }
+            }
+
+            // ===== ИСТОРИЯ =====
+            function renderHistory() {
+                const list = $('historyList');
+                let filtered = state.bets;
+                if (state.currentFilter === 'win') filtered = state.bets.filter(b => b.outcome === 'win');
+                else if (state.currentFilter === 'loss') filtered = state.bets.filter(b => b.outcome === 'loss');
+                else if (state.currentFilter === 'pending') filtered = state.bets.filter(b => b.outcome === 'pending');
+                else if (state.currentFilter === 'total') filtered = state.bets.filter(b => b.mode === 'total');
+                else if (state.currentFilter === 'fora') filtered = state.bets.filter(b => b.mode === 'fora');
+
+                if (filtered.length === 0) {
+                    list.innerHTML = '<div class="text-muted text-center" style="padding:12px 0;">Нет ставок</div>';
+                    return;
+                }
+
+                list.innerHTML = filtered.slice().reverse().map((b, idx) => {
+                    const realIndex = state.bets.length - 1 - idx;
+                    const outcomeClass = b.outcome === 'win' ? 'win' : b.outcome === 'loss' ? 'loss' : 'pending';
+                    const emoji = b.outcome === 'win' ? '✅' : b.outcome === 'loss' ? '❌' : '⏳';
+                    const modeName = MODES[b.mode]?.name || b.mode;
+                    const confidence = b.confidence || '--';
+                    return `<div class="history-item" onclick="App.openEdit(${realIndex})">
+                        <div class="left">
+                            <span>${modeName}: ${b.value} ${b.tag ? '<span class="tag">'+b.tag+'</span>' : ''}</span>
+                            <span class="date">${b.date} — ${b.match || 'Матч'} (${confidence}%)</span>
+                        </div>
+                        <div class="right">
+                            <span class="${outcomeClass}">${emoji} ${b.result || '⏳'}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+
+            function renderStats() {
+                const total = state.bets.length;
+                const wins = state.bets.filter(b => b.outcome === 'win').length;
+                const losses = state.bets.filter(b => b.outcome === 'loss').length;
+                const winRate = (wins + losses) > 0 ? Math.round((wins / (wins + losses)) * 100) : 0;
+                const balance = wins - losses;
+                let profit = 0;
+                state.bets.forEach(b => {
+                    if (b.outcome === 'win') profit += (b.odds || 1.85) - 1;
+                    else if (b.outcome === 'loss') profit -= 1;
+                });
+                const roi = total > 0 ? Math.round((profit / total) * 100) : 0;
+
+                $('statTotal').textContent = total;
+                $('statWinRate').textContent = (wins + losses) > 0 ? winRate + '%' : '0%';
+                $('statBalance').textContent = balance;
+                $('statROI').textContent = roi + '%';
+            }
+
+            function renderChart() {
+                const chart = $('chartBars');
+                const last20 = state.bets.slice(-20);
+                let bal = 0;
+                const data = [];
+                last20.forEach(b => {
+                    if (b.outcome === 'win') bal++;
+                    else if (b.outcome === 'loss') bal--;
+                    data.push(bal);
+                });
+                if (data.length === 0) {
+                    chart.innerHTML = '<span style="color:#888;font-size:11px;margin:auto;">Нет данных</span>';
+                    return;
+                }
+                const max = Math.max(1, ...data.map(Math.abs));
+                chart.innerHTML = data.map(v => {
+                    const h = Math.max(3, (Math.abs(v) / max) * 34);
+                    return `<div class="bar ${v < 0 ? 'loss' : ''}" style="height:${h}px;"></div>`;
+                }).join('');
+            }
+
+            function updateInsights() {
+                const container = $('insightsContent');
+                const total = state.bets.length;
+                if (total === 0) {
+                    container.innerHTML = `<div class="insight-item"><span class="icon">📊</span><span class="text">Нет данных. Сделайте первую ставку!</span></div>`;
+                    return;
+                }
+
+                const completed = state.bets.filter(b => b.outcome === 'win' || b.outcome === 'loss');
+                const wins = completed.filter(b => b.outcome === 'win').length;
+                const winRate = completed.length > 0 ? Math.round((wins / completed.length) * 100) : 0;
+
+                let insights = [];
+                if (winRate >= 65) insights.push(`🔥 Отлично! ${winRate}% побед (${wins} из ${completed.length})`);
+                else if (winRate >= 50) insights.push(`📊 Средний результат: ${winRate}% побед`);
+                else if (completed.length >= 3) insights.push(`⚠️ Низкая эффективность: ${winRate}% побед`);
+
+                const byMode = {};
+                state.bets.forEach(b => {
+                    if (!byMode[b.mode]) byMode[b.mode] = { total: 0, wins: 0 };
+                    byMode[b.mode].total++;
+                    if (b.outcome === 'win') byMode[b.mode].wins++;
+                });
+
+                let bestMode = null;
+                let bestRate = 0;
+                Object.entries(byMode).forEach(([mode, data]) => {
+                    if (data.total >= 2) {
+                        const rate = Math.round((data.wins / data.total) * 100);
+                        const name = MODES[mode]?.name || mode;
+                        if (rate > bestRate) { bestRate = rate;
+                            bestMode = name; }
+                        insights.push(`${rate >= 60 ? '✅' : '⚠️'} ${name}: ${rate}% (${data.wins}/${data.total})`);
+                    }
+                });
+                if (bestMode && bestRate >= 60) insights.push(`🏆 Лучший режим: ${bestMode} (${bestRate}% побед)`);
+
+                const league = getLeagueStats(state.currentLeague);
+                insights.push(`📊 Лига: ${league.name}, средний тотал ${league.goals}`);
+
+                if (state.bets.length > 0 && state.settings.enableLearning) {
+                    const learning = getLearningAdjustment(state.currentMode);
+                    if (learning > 0) insights.push(`🧠 Обучение: +${learning} к прогнозу в режиме ${MODES[state.currentMode]?.name}`);
+                    else if (learning < 0) insights.push(`🧠 Обучение: ${learning} к прогнозу в режиме ${MODES[state.currentMode]?.name}`);
+                }
+
+                if (insights.length === 0) insights.push('📊 Сделайте больше ставок для аналитики');
+                container.innerHTML = insights.slice(0, 6).map(text =>
+                    `<div class="insight-item"><span class="icon">•</span><span class="text">${text}</span></div>`
+                ).join('');
+            }
+
+            // ===== ФИЛЬТРЫ =====
+            function setFilter(filter, btn) {
+                state.currentFilter = filter;
+                qsa('#historyFilters button').forEach(b => b.classList.remove('active'));
+                if (btn) btn.classList.add('active');
+                renderHistory();
+            }
+
+            // ===== РЕДАКТИРОВАНИЕ =====
+            function openEdit(index) {
+                state.editIndex = index;
+                const b = state.bets[index];
+                $('editOutcome').value = b.outcome || 'pending';
+                $('editTag').value = b.tag || '';
+                $('editOdds').value = b.odds || 1.85;
+                $('editModal').classList.add('show');
+            }
+
+            function saveEdit() {
+                if (state.editIndex < 0 || state.editIndex >= state.bets.length) return;
+                const b = state.bets[state.editIndex];
+                const oldOutcome = b.outcome;
+                b.outcome = $('editOutcome').value;
+                b.tag = $('editTag').value;
+                b.odds = safeNumber($('editOdds').value, 1.85);
+                b.result = b.outcome === 'win' ? '✅ Выигрыш' : b.outcome === 'loss' ? '❌ Проигрыш' : '⏳ Ожидание';
+                if (oldOutcome !== b.outcome) {
+                    if (!state.learningData.modeStats[b.mode]) state.learningData.modeStats[b.mode] = { total: 0, wins: 0, losses: 0 };
+                    const stats = state.learningData.modeStats[b.mode];
+                    if (oldOutcome === 'win') stats.wins--;
+                    else if (oldOutcome === 'loss') stats.losses--;
+                    if (b.outcome === 'win') stats.wins++;
+                    else if (b.outcome === 'loss') stats.losses++;
+                    safeSave('learningData', state.learningData);
+                }
+                safeSave('bets', state.bets);
+                closeEdit();
+                renderHistory();
+                renderStats();
+                renderChart();
+                updateInsights();
+                showToast('✅ Обновлено', 'success');
+            }
+
+            function closeEdit() {
+                $('editModal').classList.remove('show');
+                state.editIndex = -1;
+            }
+
+            // ===== СОХРАНЕНИЕ =====
+            function saveBet() {
+                const v = getValues();
+                const mode = MODES[state.currentMode];
+                let total = 0;
+                if (state.currentMode === 'oz' || state.currentMode === 'clean') {
+                    total = (v.h || 0) + (v.a || 0);
+                } else {
+                    mode.fields.forEach(f => { total += v[f.id] || 0; });
+                }
+                if (total === 0 && !document.querySelectorAll('#inputArea input').some(el => el.value > 0)) {
+                    showToast('⚠️ Введите данные!', 'error');
+                    return;
+                }
+
+                const league = getLeagueStats(state.currentLeague);
+                const match = `${$('homeName')?.value || 'Хозяева'} - ${$('awayName')?.value || 'Гости'}`;
+                const bkLine = safeNumber($('bkLine')?.value);
+                const confidence = parseInt($('confidenceLabel').textContent) || 50;
+
+                let resultValue = 0;
+                let isOz = false;
+                let isClean = false;
+
+                if (state.currentMode === 'oz') {
+                    const both = (v.h || 0) > 0 && (v.a || 0) > 0;
+                    resultValue = both ? '✅ Да' : '❌ Нет';
+                    isOz = both;
+                } else if (state.currentMode === 'clean') {
+                    const homeClean = (v.a || 0) === 0;
+                    const awayClean = (v.h || 0) === 0;
+                    resultValue = homeClean ? '✅ Хозяева' : (awayClean ? '✅ Гости' : '❌ Нет');
+                    isClean = homeClean || awayClean;
+                } else {
+                    const home = (v.h1 || 0) + (v.h2 || 0);
+                    const away = (v.a1 || 0) + (v.a2 || 0);
+                    const totalScore = home + away;
+                    let expected = totalScore;
+                    const tempo = totalScore / 2;
+
+                    switch (state.currentMode) {
+                        case 'total':
+                            expected = totalScore;
+                            if (totalScore === 0) expected = Math.round(league.goals || 2.5);
+                            if (tempo > (league.goals || 2.5) + 0.5) expected += Math.round(totalScore * 0.05);
+                            else if (tempo < (league.goals || 2.5) - 0.5) expected -= Math.round(totalScore * 0.05);
+                            if (Math.abs(home - away) > 2) expected -= Math.round(totalScore * 0.03);
+                            resultValue = Math.max(0, Math.round(expected));
+                            break;
+                        case 'fora':
+                            expected = Math.round((home - away) / 2);
+                            if (totalScore === 0) expected = 0;
+                            if (tempo > (league.goals || 2.5) + 0.5) expected += 0.5;
+                            else if (tempo < (league.goals || 2.5) - 0.5) expected -= 0.5;
+                            if (Math.abs(home - away) < 2) expected = 0;
+                            resultValue = Math.round(expected * 2) / 2;
+                            break;
+                        case 'time':
+                            const first = (v.h1 || 0) + (v.a1 || 0);
+                            const second = (v.h2 || 0) + (v.a2 || 0);
+                            expected = first + Math.round(second * 0.8);
+                            if (totalScore === 0) expected = Math.round((league.goals || 2.5) / 2);
+                            if (tempo > (league.goals || 2.5) + 0.5) expected += Math.round(totalScore * 0.05);
+                            resultValue = Math.max(0, Math.round(expected));
+                            break;
+                        case 'ind':
+                            expected = home + Math.round((totalScore / 2) * 0.05);
+                            if (totalScore === 0) expected = Math.round((league.goals || 2.5) / 2);
+                            if (tempo > (league.goals || 2.5) + 0.5) expected += 0.5;
+                            resultValue = Math.max(0, Math.round(expected));
+                            break;
+                        case 'corner':
+                            expected = Math.round(totalScore * 1.05);
+                            if (totalScore === 0) expected = Math.round(league.corners || 9.0);
+                            if (tempo > 5) expected += Math.round(totalScore * 0.1);
+                            resultValue = Math.max(0, Math.round(expected));
+                            break;
+                        case 'cards':
+                            expected = Math.round(totalScore * 1.1);
+                            if (totalScore === 0) expected = Math.round(league.cards || 4.0);
+                            if (tempo > 3) expected += Math.round(totalScore * 0.15);
+                            resultValue = Math.max(0, Math.round(expected));
+                            break;
+                    }
+                }
+
+                const bet = {
+                    date: new Date().toLocaleString(),
+                    match: match,
+                    mode: state.currentMode,
+                    value: resultValue,
+                    total: total,
+                    bkLine: bkLine,
+                    confidence: confidence,
+                    tag: '',
+                    odds: 1.85,
+                    outcome: 'pending',
+                    result: '⏳ Ожидание',
+                    league: state.currentLeague
+                };
+
+                if (state.currentMode === 'corner' && typeof resultValue === 'number') bet.corners = resultValue;
+                if (state.currentMode === 'cards' && typeof resultValue === 'number') bet.cards = resultValue;
+                if (state.currentMode === 'oz') bet.oz = isOz;
+                if (state.currentMode === 'clean') bet.clean = isClean;
+
+                state.bets.push(bet);
+                safeSave('bets', state.bets);
+
+                if (state.settings.enableLearning) {
+                    if (!state.learningData.modeStats[bet.mode]) state.learningData.modeStats[bet.mode] = { total: 0, wins: 0, losses: 0 };
+                    state.learningData.modeStats[bet.mode].total++;
+                    state.learningData.totalBets++;
+                    safeSave('learningData', state.learningData);
+                }
+
+                renderHistory();
+                renderStats();
+                renderChart();
+                updateInsights();
+                showToast('✅ Ставка сохранена!', 'success');
+            }
+
+            // ===== ОЧИСТКА =====
+            function clearAll() {
+                if (!confirm('Очистить все поля?')) return;
+                const inputs = document.querySelectorAll('#inputArea input');
+                inputs.forEach(el => el.value = '');
+                $('bkLine').value = '';
+                updateSum();
+                $('resValue1').textContent = '--';
+                $('resValue2').textContent = '--';
+                $('resValue3').textContent = '--';
+                $('resAdvice').textContent = '⏳ Введите данные для расчёта';
+                $('resAdvice').className = 'advice info';
+                $('confidenceLabel').textContent = '0%';
+                $('confidenceFill').style.width = '0%';
+                $('homeScore').textContent = '0';
+                $('awayScore').textContent = '0';
+                $('sbTotal').textContent = '0';
+                $('sbStatus').textContent = '⏳ Ожидание';
+                $('sbForecast').textContent = '--';
+                $('teamStats').style.display = 'none';
+                showToast('🗑️ Очищено', 'info');
+            }
+
+            // ===== ИСТОРИЯ ДЕЙСТВИЙ =====
+            function clearHistory() {
+                if (confirm('Удалить всю историю?')) {
+                    state.bets = [];
+                    safeSave('bets', state.bets);
+                    renderHistory();
+                    renderStats();
+                    renderChart();
+                    updateInsights();
+                    showToast('🗑️ История очищена', 'success');
+                }
+            }
+
+            function exportData() {
+                const data = {
+                    bets: state.bets,
+                    learning: state.learningData,
+                    customLeagues: safeLoad('customLeagues', {}),
+                    date: new Date().toISOString()
+                };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `football_pro_${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            function resetAllData() {
+                if (confirm('⚠️ Сбросить ВСЕ данные? Отменить нельзя!')) {
+                    if (confirm('Вы уверены?')) {
+                        localStorage.clear();
+                        location.reload();
+                    }
+                }
+            }
+
+            // ===== НАСТРОЙКИ =====
+            function loadSettings() {
+                state.bets = safeLoad('bets', []);
+                state.settings = safeLoad('settings', { league: 'premier', signalThreshold: 1.5, enableLearning: true });
+                state.baseTempo = parseFloat(localStorage.getItem('baseTempo')) || 2.5;
+                state.bankroll = parseFloat(localStorage.getItem('bankroll')) || 0;
+                state.learningData = safeLoad('learningData', { totalBets: 0, wins: 0, losses: 0, modeStats: {} });
+                state.currentLeague = state.settings.league || 'premier';
+
+                $('bankroll').value = state.bankroll || '';
+                $('defaultLeague').value = state.settings.league || 'premier';
+                $('baseTempo').value = state.baseTempo.toFixed(1);
+                $('signalThreshold').value = state.settings.signalThreshold || 1.5;
+                $('signalThresholdValue').textContent = state.settings.signalThreshold || 1.5;
+                $('enableLearning').value = state.settings.enableLearning ? 'true' : 'false';
+            }
+
+            function saveSettings() {
+                const newBankroll = safeNumber($('bankroll').value);
+                if (newBankroll >= 0) {
+                    state.bankroll = newBankroll;
+                    safeSave('bankroll', state.bankroll);
+                }
+                state.settings.league = $('defaultLeague').value;
+                state.currentLeague = state.settings.league;
+                state.baseTempo = safeNumber($('baseTempo').value, 2.5);
+                safeSave('baseTempo', state.baseTempo);
+                state.settings.signalThreshold = safeNumber($('signalThreshold').value, 1.5);
+                state.settings.enableLearning = $('enableLearning').value === 'true';
+                safeSave('settings', state.settings);
+
+                renderLeagueSelect();
+                $('leagueSelect').value = state.currentLeague;
+
+                $('settingsStatus').textContent = '✅ Сохранено!';
+                setTimeout(() => { $('settingsStatus').textContent = ''; }, 2000);
+                showToast('✅ Настройки сохранены', 'success');
+
+                if (document.querySelectorAll('#inputArea input').some(el => el.value > 0)) {
+                    calculate();
+                }
+            }
+
+            function resetSettings() {
+                if (confirm('Сбросить настройки?')) {
+                    state.settings = { league: 'premier', signalThreshold: 1.5, enableLearning: true };
+                    state.baseTempo = 2.5;
+                    state.bankroll = 0;
+                    state.learningData = { totalBets: 0, wins: 0, losses: 0, modeStats: {} };
+                    safeSave('baseTempo', state.baseTempo);
+                    safeSave('bankroll', state.bankroll);
+                    safeSave('settings', state.settings);
+                    safeSave('learningData', state.learningData);
+                    loadSettings();
+                    renderLeagueSelect();
+                    $('settingsStatus').textContent = '🔄 Сброшено!';
+                    setTimeout(() => { $('settingsStatus').textContent = ''; }, 2000);
+                    showToast('🔄 Настройки сброшены', 'info');
+                }
+            }
+
+            // ===== ТЕМА =====
+            function toggleTheme() {
+                document.body.classList.toggle('light');
+                $('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+                safeSave('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+            }
+
+            function loadTheme() {
+                if (safeLoad('theme', 'dark') === 'light') {
+                    document.body.classList.add('light');
+                    $('themeBtn').textContent = '☀️';
+                }
+            }
+
+            // ===== НАВИГАЦИЯ =====
+            let touchStartX = 0;
+            let currentScreen = 0;
+            const dots = qsa('.dot');
+            const container = $('screensContainer');
+
+            container.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            container.addEventListener('touchend', function(e) {
+                const diff = touchStartX - e.changedTouches[0].screenX;
+                if (Math.abs(diff) < 40) return;
+                if (diff > 0 && currentScreen < 1) currentScreen++;
+                else if (diff < 0 && currentScreen > 0) currentScreen--;
+                else return;
+                goToScreen(currentScreen);
+            }, { passive: true });
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', function() {
+                    currentScreen = index;
+                    goToScreen(currentScreen);
+                });
+            });
+
+            function goToScreen(index) {
+                container.scrollTo({ left: index * window.innerWidth, behavior: 'smooth' });
+                dots.forEach((d, i) => { d.classList.toggle('active', i === index); });
+            }
+
+            container.addEventListener('scroll', function() {
+                const index = Math.round(this.scrollLeft / window.innerWidth);
+                if (index !== currentScreen && index >= 0 && index < 2) {
+                    currentScreen = index;
+                    dots.forEach((d, i) => { d.classList.toggle('active', i === index); });
+                }
+            }, { passive: true });
+
+            // ===== ИНИЦИАЛИЗАЦИЯ =====
+            function init() {
+                loadTheme();
+                loadSettings();
+                renderLeagueSelect();
+                renderInputs();
+                renderHistory();
+                renderStats();
+                renderChart();
+                updateInsights();
+
+                $('leagueSelect').value = state.currentLeague;
+                $('sbMode').textContent = MODES[state.currentMode].name;
+
+                $('bkLine').addEventListener('input', debouncedUpdate);
+
+                $('signalThreshold').addEventListener('input', function() {
+                    $('signalThresholdValue').textContent = this.value;
+                });
+
+                console.log('⚽ Футбол-Апп PRO 3.0 — ФИНАЛЬНАЯ ВЕРСИЯ!');
+                console.log('🌍 Всего лиг: 44 + пользовательские');
+                console.log('✅ Выбор лиги на главном экране');
+                console.log('✅ Добавление своих лиг');
+                console.log('✅ 8 режимов ставок');
+                console.log('✅ Самообучение');
+                console.log('✅ Индекс доверия');
+            }
+
+            return {
+                switchMode,
+                calculate,
+                saveBet,
+                clearAll,
+                renderHistory,
+                renderStats,
+                renderChart,
+                updateInsights,
+                setFilter,
+                openEdit,
+                saveEdit,
+                closeEdit,
+                clearHistory,
+                exportData,
+                resetAllData,
+                loadSettings,
+                saveSettings,
+                resetSettings,
+                toggleTheme,
+                goToScreen,
+                showTeamStats,
+                addCustomLeague,
+                removeCustomLeague,
+                onLeagueChange,
+                init
+            };
+        })();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            App.init();
+        });
+    </script>
+</body>
+</html>
