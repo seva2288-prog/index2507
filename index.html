@@ -3,439 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ОЗ-Апп PRO — H2H</title>
+    <title>ОЗ-Апп PRO</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: #0b0e14;
-            color: #e0e0e0;
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 12px 14px 80px 14px;
-            min-height: 100vh;
-        }
-        body.light {
-            background: #f0f2f5;
-            color: #1a1a1a;
-        }
-        body.light input,
-        body.light select,
-        body.light .card {
-            background: #ffffff !important;
-            color: #1a1a1a !important;
-            border-color: #d0d5dd !important;
-        }
-        body.light .history-item,
-        body.light .stats-card {
-            background: #ffffff !important;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 10px;
-        }
-        .header h1 {
-            font-size: 18px;
-            color: #f7931a;
-        }
-        .header-actions button {
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .card {
-            background: #1a1f2a;
-            border: 1px solid #2a3140;
-            border-radius: 12px;
-            padding: 10px 12px;
-            margin: 4px 0;
-        }
-        .card-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: #f7931a;
-            margin-bottom: 4px;
-        }
-
-        select {
-            width: 100%;
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid #2a3140;
-            background: #0b0e14;
-            color: #e0e0e0;
-            font-size: 13px;
-            outline: none;
-        }
-        select:focus {
-            border-color: #f7931a;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 8px;
-            margin: 4px 0;
-        }
-        .input-row .field {
-            flex: 1;
-        }
-        .input-row .field label {
-            font-size: 10px;
-            color: #888;
-            display: block;
-        }
-        .input-row .field input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #2a3140;
-            background: #0b0e14;
-            color: #e0e0e0;
-            text-align: center;
-            font-size: 16px;
-            outline: none;
-        }
-        .input-row .field input:focus {
-            border-color: #f7931a;
-        }
-
-        .total-display {
-            background: #1a1f2a;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 4px 0;
-            border: 1px solid #2a3140;
-        }
-        .total-display .value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #f7931a;
-        }
-        .total-display .label {
-            font-size: 10px;
-            color: #888;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 4px 0;
-            transition: 0.15s;
-        }
-        .btn:active {
-            transform: scale(0.97);
-        }
-        .btn-calc {
-            background: #f7931a;
-            color: #000;
-        }
-        .btn-save {
-            background: #f7931a;
-            color: #000;
-            flex: 2;
-        }
-        .btn-clear {
-            background: #3a1a1a;
-            color: #ff8a8a;
-            flex: 1;
-        }
-        .btn-api {
-            background: #3498db;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .btn-api:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .action-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .result-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 4px;
-            text-align: center;
-        }
-        .result-grid .label {
-            font-size: 9px;
-            color: #888;
-        }
-        .result-grid .value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #f7931a;
-        }
-        .advice {
-            margin-top: 4px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 14px;
-            border-left: 4px solid #2ecc71;
-        }
-        .advice.info {
-            background: #1a2a3a;
-            border-left-color: #f7931a;
-            color: #f7931a;
-        }
-        .advice.good {
-            background: #1a3a1a;
-            border-left-color: #2ecc71;
-            color: #2ecc71;
-        }
-        .advice.warn {
-            background: #2a2a1a;
-            border-left-color: #f1c40f;
-            color: #f1c40f;
-        }
-        .advice.bad {
-            background: #2a1a1a;
-            border-left-color: #e74c3c;
-            color: #e74c3c;
-        }
-
-        .confidence-bar {
-            background: #1a1f2a;
-            border-radius: 6px;
-            height: 6px;
-            margin: 4px 0;
-            overflow: hidden;
-        }
-        .confidence-bar .fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 0.5s;
-            background: linear-gradient(90deg, #e74c3c, #f1c40f, #2ecc71);
-        }
-
-        .bk-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            background: #1a1f2a;
-            padding: 6px 10px;
-            border-radius: 10px;
-            margin: 4px 0;
-        }
-        .bk-row label {
-            font-size: 11px;
-            color: #888;
-            white-space: nowrap;
-        }
-        .bk-row input {
-            flex: 1;
-            padding: 6px 8px;
-            border-radius: 6px;
-            border: 1px solid #2a3140;
-            background: #0b0e14;
-            color: #e0e0e0;
-            text-align: center;
-            font-size: 14px;
-            outline: none;
-        }
-        .bk-row input:focus {
-            border-color: #f7931a;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #888;
-            font-size: 13px;
-            padding: 4px 0;
-        }
-        .loading-text .spinner-small {
-            width: 14px;
-            height: 14px;
-            border: 2px solid #888;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 0.8s linear infinite;
-            flex-shrink: 0;
-        }
-
-        .h2h-results {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin: 4px 0;
-        }
-        .h2h-item {
-            background: #1a1f2a;
-            border: 1px solid #2a3140;
-            border-radius: 6px;
-            padding: 4px 8px;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .h2h-item .oz {
-            color: #2ecc71;
-        }
-        .h2h-item .no-oz {
-            color: #e74c3c;
-        }
-        .h2h-item .score {
-            font-weight: 600;
-        }
-        .h2h-item .del {
-            background: none;
-            border: none;
-            color: #e74c3c;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .history-item {
-            background: #1a1f2a;
-            padding: 6px 10px;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            margin: 2px 0;
-            cursor: pointer;
-            transition: 0.15s;
-        }
-        .history-item:active {
-            transform: scale(0.98);
-        }
-        .history-item .win {
-            color: #2ecc71;
-        }
-        .history-item .loss {
-            color: #e74c3c;
-        }
-        .history-item .pending {
-            color: #f1c40f;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px;
-        }
-        .stats-card {
-            background: #1a1f2a;
-            padding: 8px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .stats-card .num {
-            font-size: 20px;
-            font-weight: 700;
-            color: #f7931a;
-        }
-        .stats-card .label {
-            font-size: 9px;
-            color: #888;
-        }
-
-        .chart-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 2px;
-            height: 30px;
-        }
-        .chart-bars .bar {
-            flex: 1;
-            min-width: 3px;
-            border-radius: 2px 2px 0 0;
-            background: #f7931a;
-        }
-        .chart-bars .bar.loss {
-            background: #e74c3c;
-        }
-
-        .text-muted {
-            color: #555;
-        }
-        .text-center {
-            text-align: center;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 8px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 13px;
-            z-index: 999;
-            background: #1a2a3a;
-            color: #f7931a;
-            border: 1px solid #f7931a;
-            animation: slideUp 0.3s;
-            max-width: 90%;
-            text-align: center;
-        }
-        .toast.success {
-            background: #1a3a1a;
-            color: #2ecc71;
-            border-color: #2ecc71;
-        }
-        .toast.error {
-            background: #3a1a1a;
-            color: #e74c3c;
-            border-color: #e74c3c;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        @media (max-width: 420px) {
-            .input-row {
-                flex-direction: column;
-            }
-        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:system-ui,sans-serif;background:#0b0e14;color:#e0e0e0;max-width:480px;margin:0 auto;padding:12px 14px 80px;min-height:100vh}
+        body.light{background:#f0f2f5;color:#1a1a1a}
+        body.light input,body.light select,body.light .card{background:#fff!important;color:#1a1a1a!important;border-color:#d0d5dd!important}
+        .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px}
+        .header h1{font-size:18px;color:#f7931a}
+        .header-actions button{background:0;border:0;color:#aaa;font-size:18px;cursor:pointer;padding:4px}
+        .card{background:#1a1f2a;border:1px solid #2a3140;border-radius:12px;padding:10px 12px;margin:4px 0}
+        .card-title{font-size:12px;font-weight:700;color:#f7931a;margin-bottom:4px}
+        select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid #2a3140;background:#0b0e14;color:#e0e0e0;font-size:13px;outline:0}
+        select:focus{border-color:#f7931a}
+        .input-row{display:flex;gap:8px;margin:4px 0}
+        .input-row .field{flex:1}
+        .input-row .field label{font-size:10px;color:#888;display:block}
+        .input-row .field input{width:100%;padding:10px;border-radius:8px;border:1px solid #2a3140;background:#0b0e14;color:#e0e0e0;text-align:center;font-size:16px;outline:0}
+        .input-row .field input:focus{border-color:#f7931a}
+        .total-display{background:#1a1f2a;padding:10px;border-radius:8px;text-align:center;margin:4px 0;border:1px solid #2a3140}
+        .total-display .value{font-size:24px;font-weight:700;color:#f7931a}
+        .total-display .label{font-size:10px;color:#888}
+        .btn{width:100%;padding:12px;border-radius:10px;border:0;font-weight:700;font-size:16px;cursor:pointer;margin:4px 0;transition:.15s}
+        .btn:active{transform:scale(.97)}
+        .btn-calc{background:#f7931a;color:#000}
+        .btn-save{background:#f7931a;color:#000;flex:2}
+        .btn-clear{background:#3a1a1a;color:#ff8a8a;flex:1}
+        .btn-api{background:#3498db;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px}
+        .btn-api:disabled{opacity:.5;cursor:not-allowed}
+        .action-row{display:flex;gap:8px}
+        .result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center}
+        .result-grid .label{font-size:9px;color:#888}
+        .result-grid .value{font-size:20px;font-weight:700;color:#f7931a}
+        .advice{margin-top:4px;padding:8px 10px;border-radius:8px;text-align:center;font-weight:600;font-size:14px;border-left:4px solid #2ecc71}
+        .advice.info{background:#1a2a3a;border-left-color:#f7931a;color:#f7931a}
+        .advice.good{background:#1a3a1a;border-left-color:#2ecc71;color:#2ecc71}
+        .advice.warn{background:#2a2a1a;border-left-color:#f1c40f;color:#f1c40f}
+        .advice.bad{background:#2a1a1a;border-left-color:#e74c3c;color:#e74c3c}
+        .confidence-bar{background:#1a1f2a;border-radius:6px;height:6px;margin:4px 0;overflow:hidden}
+        .confidence-bar .fill{height:100%;border-radius:6px;transition:width .5s;background:linear-gradient(90deg,#e74c3c,#f1c40f,#2ecc71)}
+        .bk-row{display:flex;gap:8px;align-items:center;background:#1a1f2a;padding:6px 10px;border-radius:10px;margin:4px 0}
+        .bk-row label{font-size:11px;color:#888;white-space:nowrap}
+        .bk-row input{flex:1;padding:6px 8px;border-radius:6px;border:1px solid #2a3140;background:#0b0e14;color:#e0e0e0;text-align:center;font-size:14px;outline:0}
+        .bk-row input:focus{border-color:#f7931a}
+        .spinner{display:inline-block;width:18px;height:18px;border:2px solid #fff;border-radius:50%;border-top-color:transparent;animation:spin .8s linear infinite}
+        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        .loading-text{display:flex;align-items:center;gap:8px;color:#888;font-size:13px;padding:4px 0}
+        .loading-text .spinner-small{width:14px;height:14px;border:2px solid #888;border-radius:50%;border-top-color:transparent;animation:spin .8s linear infinite;flex-shrink:0}
+        .h2h-results{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+        .h2h-item{background:#1a1f2a;border:1px solid #2a3140;border-radius:6px;padding:4px 8px;font-size:11px;display:flex;align-items:center;gap:4px}
+        .h2h-item .oz{color:#2ecc71}
+        .h2h-item .no-oz{color:#e74c3c}
+        .h2h-item .score{font-weight:600}
+        .h2h-item .del{background:0;border:0;color:#e74c3c;font-size:14px;cursor:pointer}
+        .history-item{background:#1a1f2a;padding:6px 10px;border-radius:8px;display:flex;justify-content:space-between;font-size:12px;margin:2px 0;cursor:pointer;transition:.15s}
+        .history-item:active{transform:scale(.98)}
+        .history-item .win{color:#2ecc71}
+        .history-item .loss{color:#e74c3c}
+        .history-item .pending{color:#f1c40f}
+        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+        .stats-card{background:#1a1f2a;padding:8px;border-radius:8px;text-align:center}
+        .stats-card .num{font-size:20px;font-weight:700;color:#f7931a}
+        .stats-card .label{font-size:9px;color:#888}
+        .chart-bars{display:flex;align-items:flex-end;gap:2px;height:30px}
+        .chart-bars .bar{flex:1;min-width:3px;border-radius:2px 2px 0 0;background:#f7931a}
+        .chart-bars .bar.loss{background:#e74c3c}
+        .text-muted{color:#555}
+        .text-center{text-align:center}
+        .toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);padding:8px 20px;border-radius:12px;font-weight:600;font-size:13px;z-index:999;background:#1a2a3a;color:#f7931a;border:1px solid #f7931a;animation:slideUp .3s;max-width:90%;text-align:center}
+        .toast.success{background:#1a3a1a;color:#2ecc71;border-color:#2ecc71}
+        .toast.error{background:#3a1a1a;color:#e74c3c;border-color:#e74c3c}
+        @keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        @media(max-width:420px){.input-row{flex-direction:column}}
     </style>
 </head>
 <body>
-
     <div class="header">
         <h1>⚽ ОЗ-Апп PRO</h1>
         <div class="header-actions">
@@ -444,7 +86,6 @@
         </div>
     </div>
 
-    <!-- ВЫБОР ЛИГИ -->
     <div class="card">
         <div class="card-title">🏆 Лига</div>
         <select id="leagueSelect">
@@ -459,7 +100,6 @@
         </select>
     </div>
 
-    <!-- ВВОД ДАННЫХ -->
     <div class="card">
         <div class="card-title">⚽ Введите голы</div>
         <div class="input-row">
@@ -468,7 +108,6 @@
         </div>
     </div>
 
-    <!-- НАЗВАНИЯ КОМАНД + КНОПКА H2H -->
     <div class="card">
         <div class="card-title">🔍 Команды для H2H</div>
         <div class="input-row">
@@ -490,15 +129,12 @@
         <div class="value" id="sumDisplay">0</div>
     </div>
 
-    <!-- КНОПКИ -->
     <button class="btn btn-calc" onclick="calculate()">⚡ Рассчитать</button>
-
     <div class="action-row">
         <button class="btn btn-save" onclick="saveBet()">💾 Записать</button>
         <button class="btn btn-clear" onclick="clearAll()">🗑️ Очистить</button>
     </div>
 
-    <!-- РЕЗУЛЬТАТ -->
     <div class="card">
         <div class="result-grid">
             <div><div class="label">Обе забьют</div><div class="value" id="resValue1">--</div></div>
@@ -513,14 +149,12 @@
         <div class="confidence-bar"><div class="fill" id="confidenceFill" style="width:0%"></div></div>
     </div>
 
-    <!-- ЛИНИЯ БК -->
     <div class="bk-row">
         <label>📈 Линия БК (ОЗ):</label>
         <input type="number" id="bkLine" value="0" step="0.05" />
         <span id="bkComment" style="font-size:12px;font-weight:600;padding:2px 10px;border-radius:12px;">—</span>
     </div>
 
-    <!-- ИСТОРИЯ -->
     <div style="margin-top:6px;">
         <div style="display:flex;justify-content:space-between;margin:4px 0;">
             <span style="font-size:14px;font-weight:700;color:#f7931a;">📜 История</span>
@@ -529,7 +163,6 @@
         <div id="historyList"><div class="text-muted text-center" style="padding:10px 0;">Нет ставок</div></div>
     </div>
 
-    <!-- СТАТИСТИКА -->
     <div style="margin-top:6px;">
         <div style="font-size:14px;font-weight:700;color:#f7931a;margin-bottom:4px;">📊 Статистика</div>
         <div class="stats-grid" id="statsGrid">
@@ -540,13 +173,11 @@
         </div>
     </div>
 
-    <!-- ГРАФИК -->
     <div class="card">
         <div class="card-title">📈 График баланса (последние 20)</div>
         <div class="chart-bars" id="chartBars"></div>
     </div>
 
-    <!-- ВЫВОДЫ -->
     <div class="card" style="border-left:4px solid #f7931a;">
         <div class="card-title">🧠 Умные выводы</div>
         <div id="insightsContent"><div class="text-muted text-center" style="padding:6px 0;">Нет данных</div></div>
@@ -554,19 +185,15 @@
 
     <script>
         // ================================================================
-        // ОЗ-Апп PRO — H2H через готовый CORS-прокси
+        // ОЗ-Апп PRO — через рабочий прокси
         // ================================================================
 
-        // === КЛЮЧ API ===
         const API_KEY = '9ec6d6fe53864e81b6ca7f802926e838';
+        const PROXY_URL = 'https://api.allorigins.win/raw?url=https://api.football-data.org/v4';
 
-        // === ГОТОВЫЙ CORS-ПРОКСИ ===
-        const PROXY_URL = 'https://cors-proxy.fm.workers.dev?url=https://api.football-data.org/v4';
-
-        // === ВСЕ ЛИГИ ===
         const ALL_LEAGUES = {
             'premier': { name: '🏴 АПЛ', oz: 65 },
-            'championship': { name: '🏴 Чемпионшип', oz: 62 },
+            'championship': { name:🏴 Чемпионшип', oz: 62 },
             'laliga': { name: '🇪🇸 Ла Лига', oz: 60 },
             'bundesliga': { name: '🇩🇪 Бундеслига', oz: 68 },
             'seriea': { name: '🇮🇹 Серия А', oz: 62 },
@@ -576,7 +203,6 @@
             'ucl': { name: '🏆 ЛЧ', oz: 66 }
         };
 
-        // ===== СОСТОЯНИЕ =====
         let state = {
             bets: JSON.parse(localStorage.getItem('oz_bets') || '[]'),
             currentLeague: 'premier',
@@ -602,7 +228,6 @@
             return ALL_LEAGUES[state.currentLeague] || ALL_LEAGUES['premier'];
         }
 
-        // ===== ЗАГРУЗКА H2H ЧЕРЕЗ ПРОКСИ =====
         async function loadH2H() {
             const homeTeam = $('homeTeamH2H').value.trim();
             const awayTeam = $('awayTeamH2H').value.trim();
@@ -614,7 +239,6 @@
 
             if (state.isLoading) return;
 
-            // ПОКАЗЫВАЕМ ИНДИКАТОР
             state.isLoading = true;
             const btn = $('loadH2HBtn');
             const btnText = $('loadBtnText');
@@ -629,7 +253,6 @@
             results.innerHTML = '';
 
             try {
-                // Поиск команды через прокси
                 const searchUrl = `${PROXY_URL}/teams?search=${encodeURIComponent(homeTeam)}`;
                 const response = await fetch(searchUrl, {
                     headers: { 'X-Auth-Token': API_KEY }
@@ -643,7 +266,7 @@
                     } else {
                         showToast(`⚠️ Ошибка API: ${response.status}`, 'error');
                     }
-                    status.textContent = '❌ Ошибка загрузки. Используйте ручной ввод.';
+                    status.textContent = '❌ Ошибка загрузки.';
                     return;
                 }
 
@@ -655,8 +278,6 @@
                 }
 
                 const teamId = data.teams[0].id;
-
-                // Загружаем матчи команды через прокси
                 const matchesUrl = `${PROXY_URL}/teams/${teamId}/matches?limit=10&status=FINISHED`;
                 const matchesResponse = await fetch(matchesUrl, {
                     headers: { 'X-Auth-Token': API_KEY }
@@ -674,7 +295,6 @@
                     return;
                 }
 
-                // Фильтруем матчи с указанным соперником
                 const filteredMatches = matchesData.matches.filter(m => {
                     const home = m.homeTeam.name.toLowerCase();
                     const away = m.awayTeam.name.toLowerCase();
@@ -683,11 +303,10 @@
                 }).slice(0, 5);
 
                 if (filteredMatches.length === 0) {
-                    status.textContent = `❌ Нет очных встреч между "${homeTeam}" и "${awayTeam}" за последние матчи.`;
+                    status.textContent = `❌ Нет очных встреч между "${homeTeam}" и "${awayTeam}".`;
                     return;
                 }
 
-                // Парсим результаты
                 const h2hData = filteredMatches.map(m => {
                     const home = m.homeTeam.name;
                     const away = m.awayTeam.name;
@@ -699,7 +318,6 @@
 
                 state.h2hData = h2hData;
 
-                // Отображаем результаты
                 status.textContent = `✅ Найдено ${h2hData.length} очных встреч:`;
                 results.innerHTML = h2hData.map(m => {
                     const ozClass = m.oz ? 'oz' : 'no-oz';
@@ -710,7 +328,6 @@
                     </div>`;
                 }).join('');
 
-                // Автоматически подставляем голы
                 const lastMatch = h2hData[0];
                 $('homeGoals').value = lastMatch.homeScore;
                 $('awayGoals').value = lastMatch.awayScore;
@@ -722,7 +339,7 @@
             } catch (error) {
                 console.error('H2H Error:', error);
                 status.textContent = '❌ Ошибка сети. Проверьте интернет.';
-                showToast('⚠️ Ошибка загрузки. Попробуйте ручной ввод.', 'error');
+                showToast('⚠️ Ошибка загрузки.', 'error');
             } finally {
                 state.isLoading = false;
                 btn.disabled = false;
@@ -731,7 +348,6 @@
             }
         }
 
-        // ===== РАСЧЕТ =====
         function calculate() {
             const home = safeNum($('homeGoals').value);
             const away = safeNum($('awayGoals').value);
@@ -753,7 +369,6 @@
             let prob = both ? 75 : 25;
             prob = (prob + (league.oz || 60)) / 2;
 
-            // Корректировка по H2H
             if (state.h2hData && state.h2hData.length > 0) {
                 const h2hOzCount = state.h2hData.filter(m => m.oz).length;
                 const h2hProb = (h2hOzCount / state.h2hData.length) * 100;
@@ -773,7 +388,6 @@
             $('resValue2').textContent = prob + '%';
             $('resValue3').textContent = hasBk ? bkLine : '--';
 
-            // Индекс доверия
             let confidence = prob;
             if (hasBk && ((both && bkLine > 0.5) || (!both && bkLine < 0.5))) confidence += 10;
             confidence = Math.min(100, Math.max(0, Math.round(confidence)));
@@ -785,7 +399,6 @@
             else if (confidence > 40) fill.style.background = 'linear-gradient(90deg, #f1c40f, #f39c12)';
             else fill.style.background = 'linear-gradient(90deg, #e74c3c, #c0392b)';
 
-            // Совет
             const advice = $('resAdvice');
             if (prob > 70) {
                 advice.textContent = `✅ Высокая вероятность ${prob}% — ОЗ`;
@@ -816,7 +429,6 @@
             $('sumDisplay').textContent = total;
         }
 
-        // ===== СОХРАНЕНИЕ СТАВКИ =====
         function saveBet() {
             const home = safeNum($('homeGoals').value);
             const away = safeNum($('awayGoals').value);
@@ -855,7 +467,6 @@
             showToast('✅ Ставка сохранена!', 'success');
         }
 
-        // ===== ИСТОРИЯ =====
         function renderHistory() {
             const list = $('historyList');
             if (state.bets.length === 0) {
@@ -874,7 +485,6 @@
             }).join('');
         }
 
-        // ===== СТАТИСТИКА =====
         function renderStats() {
             const total = state.bets.length;
             const wins = state.bets.filter(b => b.outcome === 'win').length;
@@ -888,7 +498,6 @@
             $('statROI').textContent = total > 0 ? Math.round((balance / total) * 100) + '%' : '0%';
         }
 
-        // ===== ГРАФИК =====
         function renderChart() {
             const chart = $('chartBars');
             const last20 = state.bets.slice(-20);
@@ -910,7 +519,6 @@
             }).join('');
         }
 
-        // ===== ВЫВОДЫ =====
         function renderInsights() {
             const container = $('insightsContent');
             const total = state.bets.length;
@@ -939,7 +547,6 @@
             container.innerHTML = `<div style="font-size:12px;padding:2px 0;">${text}</div>`;
         }
 
-        // ===== РЕДАКТИРОВАНИЕ СТАВКИ =====
         function editBet(index) {
             const b = state.bets[index];
             const newOutcome = prompt(`Исход для ${b.match}:\n1 - Выиграла\n2 - Проиграла\n3 - Неизвестно`, '3');
@@ -956,7 +563,6 @@
             showToast('✅ Обновлено', 'success');
         }
 
-        // ===== ОЧИСТКА =====
         function clearAll() {
             $('homeGoals').value = '0';
             $('awayGoals').value = '0';
@@ -1037,11 +643,10 @@
         renderInsights();
         updateSum();
 
-        console.log('⚽ ОЗ-Апп PRO с CORS-прокси!');
+        console.log('⚽ ОЗ-Апп PRO с рабочим прокси!');
         console.log('🔑 API ключ: ' + API_KEY);
         console.log('🌐 Прокси: ' + PROXY_URL);
         console.log('✅ Введите команды на английском и нажмите "Загрузить H2H"');
     </script>
-
 </body>
 </html>
