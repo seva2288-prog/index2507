@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Квантум — Тотал, Фора, ОЗ</title>
-    <!-- 🆕 ИКОНКА ПРИЛОЖЕНИЯ -->
+    <title>Квантум 1.1 — Тотал, Фора, ОЗ</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>">
     <style>
         *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -63,11 +62,6 @@
         .h2h-item .oz{color:#2ecc71}
         .h2h-item .no-oz{color:#e74c3c}
         .h2h-item .score{font-weight:600}
-        .history-item{background:#1a1f2a;padding:6px 10px;border-radius:8px;display:flex;justify-content:space-between;font-size:12px;margin:2px 0;cursor:pointer;transition:.15s}
-        .history-item:active{transform:scale(.98)}
-        .history-item .win{color:#2ecc71}
-        .history-item .loss{color:#e74c3c}
-        .history-item .pending{color:#f1c40f}
         .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
         .stats-card{background:#1a1f2a;padding:8px;border-radius:8px;text-align:center}
         .stats-card .num{font-size:20px;font-weight:700;color:#f7931a}
@@ -82,11 +76,83 @@
         .toast.error{background:#3a1a1a;color:#e74c3c;border-color:#e74c3c}
         @keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         @media(max-width:420px){.input-row{flex-direction:column}}
+
+        /* ===== НОВЫЕ СТИЛИ ДЛЯ СТАТИСТИКИ ===== */
+        .match-stats {
+            background: #1a1f2a;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-left: 3px solid #f7931a;
+            font-size: 12px;
+        }
+        .match-stats .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            border-bottom: 1px solid #2a3140;
+        }
+        .match-stats .stat-row:last-child {
+            border-bottom: none;
+        }
+        .match-stats .stat-label {
+            color: #888;
+        }
+        .match-stats .stat-value {
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        .match-stats .stat-value.green {
+            color: #2ecc71;
+        }
+        .match-stats .stat-value.orange {
+            color: #f1c40f;
+        }
+        .match-stats .stat-value.red {
+            color: #e74c3c;
+        }
+
+        .h2h-summary {
+            background: #1a2a3a;
+            border-radius: 8px;
+            padding: 6px 10px;
+            margin: 4px 0;
+            font-size: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .h2h-summary .item {
+            background: #0b0e14;
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid #2a3140;
+        }
+        .h2h-summary .item .num {
+            font-weight: 700;
+            color: #f7931a;
+        }
+        .history-item {
+            background: #1a1f2a;
+            padding: 6px 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin: 2px 0;
+            cursor: pointer;
+            transition: .15s;
+        }
+        .history-item:active{transform:scale(.98)}
+        .history-item .win{color:#2ecc71}
+        .history-item .loss{color:#e74c3c}
+        .history-item .pending{color:#f1c40f}
     </style>
 </head>
 <body>
+
     <div class="header">
-        <h1>⚛️ Квантум <span>v1.0</span></h1>
+        <h1>⚛️ Квантум <span>v1.1</span></h1>
         <div class="header-actions">
             <button onclick="toggleTheme()">🌙</button>
             <button onclick="resetAll()">🔄</button>
@@ -112,7 +178,7 @@
     </div>
 
     <div class="card">
-        <div class="card-title">🔍 Поиск H2H</div>
+        <div class="card-title">🔍 Поиск H2H + Статистика</div>
         <div class="input-row">
             <div class="field"><label>🏠 Хозяева</label><input type="text" id="homeTeamH2H" placeholder="Real Madrid" /></div>
             <div class="field"><label>✈️ Гости</label><input type="text" id="awayTeamH2H" placeholder="Barcelona" /></div>
@@ -189,7 +255,7 @@
 
     <script>
         // ================================================================
-        // КВАНТУМ — Тотал, Фора, ОЗ
+        // КВАНТУМ 1.1 — Тотал, Фора, ОЗ + Статистика матча
         // ================================================================
 
         // 🔑 API КЛЮЧ
@@ -256,11 +322,7 @@
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
 
-            const labels = {
-                'total': 'Ожидаемый тотал',
-                'fora': 'Ожидаемая фора',
-                'oz': 'Обе забьют'
-            };
+            const labels = { 'total': 'Ожидаемый тотал', 'fora': 'Ожидаемая фора', 'oz': 'Обе забьют' };
             $('resLabel1').textContent = labels[mode] || 'Ожидаемый';
 
             $('resValue1').textContent = '--';
@@ -302,6 +364,7 @@
             results.innerHTML = '';
 
             try {
+                // Поиск ID первой команды
                 const searchUrl =
                     `${PROXY_URL}?url=https://v3.football.api-sports.io/teams?search=${encodeURIComponent(homeTeam)}`;
                 const response = await fetch(searchUrl, {
@@ -323,6 +386,7 @@
 
                 const homeId = data.response[0].team.id;
 
+                // Поиск ID второй команды
                 const searchUrl2 =
                     `${PROXY_URL}?url=https://v3.football.api-sports.io/teams?search=${encodeURIComponent(awayTeam)}`;
                 const response2 = await fetch(searchUrl2, {
@@ -343,8 +407,9 @@
 
                 const awayId = data2.response[0].team.id;
 
+                // Загрузка H2H
                 const h2hUrl =
-                    `${PROXY_URL}?url=https://v3.football.api-sports.io/fixtures/headtohead?h2h=${homeId}-${awayId}&last=10`;
+                    `${PROXY_URL}?url=https://v3.football.api-sports.io/fixtures/headtohead?h2h=${homeId}-${awayId}&last=20`;
                 const h2hResponse = await fetch(h2hUrl, {
                     headers: { 'x-apisports-key': API_KEY }
                 });
@@ -374,23 +439,112 @@
 
                 state.h2hData = matches;
 
-                status.textContent = `✅ Найдено ${matches.length} очных встреч:`;
-                results.innerHTML = matches.map(m => {
-                    const ozClass = m.oz ? 'oz' : 'no-oz';
-                    const ozText = m.oz ? '✅ ОЗ' : '❌ Нет';
+                // ===== РАСШИРЕННАЯ СТАТИСТИКА МАТЧА =====
+                // Загружаем статистику для первого матча (если есть)
+                let matchStats = null;
+                if (h2hData.response && h2hData.response.length > 0) {
+                    const firstMatchId = h2hData.response[0].fixture.id;
+                    const statsUrl =
+                        `${PROXY_URL}?url=https://v3.football.api-sports.io/fixtures/statistics?fixture=${firstMatchId}`;
+                    const statsResponse = await fetch(statsUrl, {
+                        headers: { 'x-apisports-key': API_KEY }
+                    });
+
+                    if (statsResponse.ok) {
+                        const statsData = await statsResponse.json();
+                        if (statsData.response && statsData.response.length > 0) {
+                            matchStats = statsData.response;
+                        }
+                    }
+                }
+
+                // ===== ВЫВОД H2H (СЖАТЫЙ) =====
+                const total = matches.length;
+                const ozCount = matches.filter(m => m.oz).length;
+                const avgTotal = (matches.reduce((sum, m) => sum + m.total, 0) / total).toFixed(1);
+                const homeWins = matches.filter(m => m.homeScore > m.awayScore).length;
+                const awayWins = matches.filter(m => m.awayScore > m.homeScore).length;
+                const draws = total - homeWins - awayWins;
+                const ozPercent = Math.round((ozCount / total) * 100);
+
+                let summaryHtml = `
+                    <div class="h2h-summary">
+                        <span class="item">📊 Всего: <span class="num">${total}</span></span>
+                        <span class="item">⚽ ОЗ: <span class="num">${ozPercent}%</span></span>
+                        <span class="item">📈 Тотал: <span class="num">${avgTotal}</span></span>
+                        <span class="item">🏠 ${homeWins} | ✈️ ${awayWins} | 🤝 ${draws}</span>
+                    </div>
+                `;
+
+                // Последние 5 матчей (компактно)
+                const last5 = matches.slice(0, 5);
+                let matchesHtml = last5.map(m => {
+                    const ozLabel = m.oz ? '✅' : '❌';
                     return `<div class="h2h-item">
                         <span class="score">${m.home} ${m.homeScore}:${m.awayScore} ${m.away}</span>
-                        <span class="${ozClass}">${ozText}</span>
+                        <span class="${m.oz ? 'oz' : 'no-oz'}">${ozLabel}</span>
                     </div>`;
                 }).join('');
 
+                // Если больше 5 матчей, показываем кнопку "Ещё"
+                let moreBtn = '';
+                if (total > 5) {
+                    moreBtn =
+                        `<button onclick="showAllH2H()" style="background:#2a3140;color:#aaa;border:none;padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;margin-top:4px;width:100%;">Показать все ${total} матчей</button>`;
+                }
+
+                // ===== ВЫВОД РАСШИРЕННОЙ СТАТИСТИКИ =====
+                let statsHtml = '';
+                if (matchStats) {
+                    statsHtml = `<div class="match-stats">`;
+                    const stats = matchStats[0];
+                    if (stats && stats.statistics) {
+                        stats.statistics.forEach(s => {
+                            if (s.type === 'Ball Possession') {
+                                statsHtml +=
+                                    `<div class="stat-row"><span class="stat-label">⚡ Владение</span><span class="stat-value">${s.value}</span></div>`;
+                            }
+                            if (s.type === 'Total Shots') {
+                                statsHtml +=
+                                    `<div class="stat-row"><span class="stat-label">🎯 Удары</span><span class="stat-value">${s.value}</span></div>`;
+                            }
+                            if (s.type === 'Shots on Goal') {
+                                statsHtml +=
+                                    `<div class="stat-row"><span class="stat-label">🎯 Удары в створ</span><span class="stat-value">${s.value}</span></div>`;
+                            }
+                            if (s.type === 'Corner Kicks') {
+                                statsHtml +=
+                                    `<div class="stat-row"><span class="stat-label">🔄 Угловые</span><span class="stat-value">${s.value}</span></div>`;
+                            }
+                            if (s.type === 'Yellow Cards') {
+                                statsHtml +=
+                                    `<div class="stat-row"><span class="stat-label">🟨 ЖК</span><span class="stat-value">${s.value}</span></div>`;
+                            }
+                            if (s.type === 'Red Cards') {
+                                statsHtml +=
+                                    `<div class="stat-row"><span class="stat-label">🟥 КК</span><span class="stat-value">${s.value}</span></div>`;
+                            }
+                            if (s.type === 'Fouls') {
+                                statsHtml +=
+                                    `<div class="stat-row"><span class="stat-label">⚔️ Фолы</span><span class="stat-value">${s.value}</span></div>`;
+                            }
+                        });
+                    }
+                    statsHtml += `</div>`;
+                }
+
+                // Собираем всё вместе
+                status.textContent = `✅ Найдено ${total} очных встреч:`;
+                results.innerHTML = summaryHtml + statsHtml + matchesHtml + moreBtn;
+
+                // Автозаполнение голом из последнего матча
                 const lastMatch = matches[0];
                 $('homeGoals').value = lastMatch.homeScore;
                 $('awayGoals').value = lastMatch.awayScore;
                 updateSum();
                 calculate();
 
-                showToast(`✅ Загружено ${matches.length} матчей!`, 'success');
+                showToast(`✅ Загружено ${total} матчей!`, 'success');
 
             } catch (error) {
                 console.error('H2H Error:', error);
@@ -402,6 +556,21 @@
                 btnText.textContent = '📊 Загрузить H2H';
                 spinner.style.display = 'none';
             }
+        }
+
+        // Функция для показа всех матчей
+        function showAllH2H() {
+            if (!state.h2hData || state.h2hData.length === 0) return;
+            const results = $('h2hResults');
+            const matches = state.h2hData;
+            let html = matches.map(m => {
+                const ozLabel = m.oz ? '✅' : '❌';
+                return `<div class="h2h-item">
+                    <span class="score">${m.home} ${m.homeScore}:${m.awayScore} ${m.away}</span>
+                    <span class="${m.oz ? 'oz' : 'no-oz'}">${ozLabel}</span>
+                </div>`;
+            }).join('');
+            results.innerHTML = html;
         }
 
         function calculate() {
@@ -766,10 +935,10 @@
         renderInsights();
         updateSum();
 
-        console.log('⚛️ КВАНТУМ — Тотал, Фора, ОЗ!');
+        console.log('⚛️ КВАНТУМ 1.1 — Тотал, Фора, ОЗ + Статистика!');
         console.log('🔑 API ключ: ' + API_KEY);
         console.log('✅ Доступно 100+ лиг');
-        console.log('📊 3 режима: Тотал, Фора, ОЗ');
+        console.log('📊 3 режима + расширенная статистика матча');
     </script>
 </body>
 </html>
